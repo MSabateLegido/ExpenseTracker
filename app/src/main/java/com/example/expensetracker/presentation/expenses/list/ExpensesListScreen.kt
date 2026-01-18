@@ -1,7 +1,10 @@
 package com.example.expensetracker.presentation.expenses.list
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -10,29 +13,37 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.core.graphics.toColor
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.expensetracker.data.local.database.ExpenseTrackerDatabase
+import com.example.expensetracker.data.repository.ExpenseRepository
 import com.example.expensetracker.domain.model.Expense
+import java.time.YearMonth
+import java.time.format.DateTimeFormatter
 import java.time.format.TextStyle
 import java.util.Locale
+
 
 @Composable
 fun ExpensesListScreen(
     modifier: Modifier = Modifier,
-    viewModel: ExpensesListViewModel = viewModel()
+    state: ExpensesListState
 ) {
-    val state by viewModel.state.collectAsState()
-
-    LazyColumn(modifier = modifier.fillMaxSize()) {
+    LazyColumn(
+        modifier = modifier,
+        contentPadding = PaddingValues(vertical = 16.dp)
+    ) {
         state.months.forEach { month ->
             item {
                 MonthHeader(month)
@@ -42,65 +53,70 @@ fun ExpensesListScreen(
                 items = month.expenses,
                 key = { it.id }
             ) { expense ->
-                ExpenseRow(expense)
+                ExpenseItem(expense)
             }
         }
     }
-
 }
 
 @Composable
-fun MonthHeader(
-    month: ExpensesMonth,
-    modifier: Modifier = Modifier
-) {
+fun MonthHeader(month: ExpensesMonth) {
     Column(
-        modifier = modifier
+        modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 12.dp)
     ) {
         Text(
-            text = month.month
-                .month
-                .getDisplayName(TextStyle.FULL, Locale.getDefault())
-                .replaceFirstChar { it.uppercase() },
-            style = MaterialTheme.typography.headlineMedium
+            text = month.month.formatMonthYear(),
+            style = MaterialTheme.typography.titleLarge
         )
 
-        Spacer(modifier = Modifier.height(4.dp))
-
         Text(
-            text = month.total,
-            style = MaterialTheme.typography.titleMedium,
+            text = month.total.toString(),
+            style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.primary
         )
     }
 }
 
-
 @Composable
-fun ExpenseRow(expense: Expense) {
-    Column(
+fun ExpenseItem(expense: Expense) {
+    Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 2.dp)
-            .clip(RoundedCornerShape(8.dp))
-            .background(MaterialTheme.colorScheme.surfaceVariant)
-            .padding(16.dp)
+            .padding(horizontal = 16.dp, vertical = 8.dp),
+        horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Text(
-            text = expense.title,
-            style = MaterialTheme.typography.bodyLarge
-        )
-        Text(
-            text = "${expense.category.name} · ${expense.date}",
-            style = MaterialTheme.typography.bodySmall
-        )
-        Text(
-            text = expense.amount,
-            style = MaterialTheme.typography.bodyMedium
-        )
+        Column {
+            Text(
+                text = expense.title,
+                style = MaterialTheme.typography.bodyLarge
+            )
+            Text(
+                text = expense.category.name,
+                style = MaterialTheme.typography.bodySmall,
+                color = Color(expense.category.color)
+            )
+        }
+
+        Column(horizontalAlignment = Alignment.End) {
+            Text(
+                text = expense.amount.toString(),
+                style = MaterialTheme.typography.bodyLarge
+            )
+            Text(
+                text = expense.date.format(DateTimeFormatter.ofPattern("dd/MM")),
+                style = MaterialTheme.typography.bodySmall
+            )
+        }
     }
 }
+
+
+fun YearMonth.formatMonthYear(): String {
+    val formatter = DateTimeFormatter.ofPattern("MMMM yyyy", Locale.getDefault())
+    return this.atDay(1).format(formatter).uppercase()
+}
+
 
 
