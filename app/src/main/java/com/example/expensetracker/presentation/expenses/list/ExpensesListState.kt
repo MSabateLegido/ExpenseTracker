@@ -9,7 +9,7 @@ data class ExpensesListState(
 
 data class ExpensesMonth(
     val month: YearMonth,
-    val total: String,
+    val total: Double,
     val expenses: List<Expense>
 )
 

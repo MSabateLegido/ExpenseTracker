@@ -4,6 +4,7 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import com.example.expensetracker.domain.model.Expense
 import java.time.LocalDate
 
 @Entity(
@@ -27,7 +28,10 @@ data class ExpenseEntity(
     val id: Long = 0L,
     val title: String,
     val amount: Double,
-    val date: LocalDate,
+    val date: LocalDate = LocalDate.now(),
     val subcategoryId: Long
 )
+
+
+
 

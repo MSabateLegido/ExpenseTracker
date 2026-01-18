@@ -6,6 +6,7 @@ import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
 import com.example.expensetracker.data.local.entity.ExpenseEntity
+import com.example.expensetracker.data.local.entity.ExpenseWithSubcategory
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -23,7 +24,7 @@ interface ExpenseDao {
         SELECT * FROM expenses
         ORDER BY date DESC
     """)
-    fun getAllExpenses(): Flow<List<ExpenseEntity>>
+    fun getAllExpenses(): Flow<List<ExpenseWithSubcategory>>
 
     @Query("""
         SELECT * FROM expenses

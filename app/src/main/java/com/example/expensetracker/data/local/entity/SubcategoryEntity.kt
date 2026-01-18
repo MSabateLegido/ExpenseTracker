@@ -4,6 +4,7 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import com.example.expensetracker.domain.model.Subcategory
 
 @Entity(
     tableName = "subcategories",
@@ -28,4 +29,6 @@ data class SubcategoryEntity(
     val color: Int,
     val categoryId: Long
 )
+
+
 

@@ -1,8 +1,10 @@
 package com.example.expensetracker.data.local.entity
 
+import androidx.core.graphics.toColor
 import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import com.example.expensetracker.domain.model.Category
 
 @Entity(
     tableName = "categories",
@@ -16,4 +18,11 @@ data class CategoryEntity(
     val name: String,
     val color: Int
 )
+fun CategoryEntity.toUi(): Category =
+    Category(
+        id = id,
+        name = name,
+        color = color.toColor()
+    )
+
 
