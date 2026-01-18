@@ -12,13 +12,19 @@ import kotlinx.coroutines.flow.Flow
 interface CategoryDao {
 
     @Insert
-    suspend fun insert(category: CategoryEntity)
+    suspend fun insert(category: CategoryEntity): Long
 
     @Update
     suspend fun update(category: CategoryEntity)
 
     @Delete
     suspend fun delete(category: CategoryEntity)
+
+    @Query("""
+        SELECT * FROM categories
+        WHERE id = :id
+    """)
+    fun deleteById(id: Long)
 
     @Query("""
         SELECT * FROM categories

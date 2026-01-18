@@ -25,4 +25,22 @@ interface ExpenseDao {
     """)
     fun getAllExpenses(): Flow<List<ExpenseEntity>>
 
+    @Query("""
+        SELECT * FROM expenses
+        WHERE id = :id
+    """)
+    fun getById(id: Long): ExpenseEntity?
+
+    @Query("""
+        SELECT COUNT(*) > 0 FROM expenses
+        WHERE subcategoryId = :subcategoryId
+    """)
+    fun hasExpenses(subcategoryId: Long): Boolean
+
+    @Query("""
+        UPDATE expenses
+        SET subcategoryId = :toSubcategoryId
+        WHERE subcategoryId = :fromSubcategoryId
+    """)
+    fun moveExpenses(fromSubcategoryId: Long, toSubcategoryId: Long)
 }

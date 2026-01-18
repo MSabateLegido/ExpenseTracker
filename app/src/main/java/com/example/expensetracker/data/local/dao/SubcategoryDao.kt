@@ -21,10 +21,22 @@ interface SubcategoryDao {
     suspend fun delete(subcategory: SubcategoryEntity)
 
     @Query("""
+        DELETE * FROM subcategories
+        WHERE id = :id
+    """)
+    fun deleteById(id: Long)
+
+    @Query("""
         SELECT * FROM subcategories
         WHERE categoryId = :categoryId
         ORDER BY name
     """)
     fun getByCategory(categoryId: Long): Flow<List<SubcategoryEntity>>
+
+    @Query("""
+        SELECT COUNT(*) FROM subcategories
+        WHERE categoryId = :categoryId
+    """)
+    fun countByCategory(categoryId: Long): Int
 
 }
