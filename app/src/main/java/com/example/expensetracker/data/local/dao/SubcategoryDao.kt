@@ -21,7 +21,7 @@ interface SubcategoryDao {
     suspend fun delete(subcategory: SubcategoryEntity)
 
     @Query("""
-        DELETE * FROM subcategories
+        DELETE FROM subcategories
         WHERE id = :id
     """)
     fun deleteById(id: Long)
