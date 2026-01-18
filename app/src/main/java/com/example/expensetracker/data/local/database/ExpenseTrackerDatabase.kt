@@ -11,6 +11,7 @@ import com.example.expensetracker.data.local.entity.CategoryEntity
 import com.example.expensetracker.data.local.entity.ExpenseEntity
 import com.example.expensetracker.data.local.entity.FavoriteExpenseEntity
 import com.example.expensetracker.data.local.entity.SubcategoryEntity
+import com.example.expensetracker.utils.LocalDateConverter
 
 @Database(
     entities = [
