@@ -6,6 +6,7 @@ import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
 import com.example.expensetracker.data.local.entity.SubcategoryEntity
+import com.example.expensetracker.data.local.entity.SubcategoryWithCategory
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -25,6 +26,11 @@ interface SubcategoryDao {
         WHERE id = :id
     """)
     fun deleteById(id: Long)
+
+    @Query("""
+        SELECT * FROM subcategories
+    """)
+    fun getAllSubcategories(): Flow<List<SubcategoryWithCategory>>
 
     @Query("""
         SELECT * FROM subcategories

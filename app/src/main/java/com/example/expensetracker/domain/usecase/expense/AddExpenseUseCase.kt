@@ -1,4 +1,14 @@
 package com.example.expensetracker.domain.usecase.expense
 
-class AddExpenseUseCase {
+import com.example.expensetracker.data.repository.ExpenseRepository
+import com.example.expensetracker.domain.model.Expense
+import javax.inject.Inject
+
+class AddExpenseUseCase @Inject constructor(
+    private val expenseRepository: ExpenseRepository
+) {
+
+    suspend operator fun invoke(expense: Expense) {
+        expenseRepository.addExpense(expense)
+    }
 }
