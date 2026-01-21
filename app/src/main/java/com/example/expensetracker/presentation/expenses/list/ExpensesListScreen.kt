@@ -14,7 +14,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.runtime.Composable
@@ -40,7 +45,8 @@ import kotlin.math.exp
 @Composable
 fun ExpensesListScreen(
     modifier: Modifier = Modifier,
-    state: ExpensesListState
+    state: ExpensesListState,
+    onEvent: (ExpensesListEvent) -> Unit
 ) {
     LazyColumn(
         modifier = modifier,

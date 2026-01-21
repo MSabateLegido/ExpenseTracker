@@ -8,16 +8,23 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavController
 
 
 @Composable
 fun AddExpenseRoute(
     modifier: Modifier = Modifier,
-    viewModel: AddExpenseViewModel = hiltViewModel()
+    viewModel: AddExpenseViewModel = hiltViewModel(),
+    navController: NavController
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
     Scaffold { innerPadding ->
+        AddExpenseEffectHandler(
+            effects = viewModel.effects,
+            navController = navController
+        )
+
         AddExpenseScreen(
             modifier = modifier.padding(innerPadding),
             state = state,

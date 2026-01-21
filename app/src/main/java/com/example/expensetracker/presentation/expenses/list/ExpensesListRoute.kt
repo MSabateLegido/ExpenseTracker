@@ -11,25 +11,31 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavController
 
 @Composable
 fun ExpensesListRoute(
     modifier: Modifier = Modifier,
-    onAddExpense: () -> Unit,
-    viewModel: ExpensesListViewModel = hiltViewModel()
+    viewModel: ExpensesListViewModel = hiltViewModel(),
+    navController: NavController
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
-
     Scaffold(
         floatingActionButton = {
-            FloatingActionButton(onClick = onAddExpense) {
+            FloatingActionButton(onClick = { viewModel.onEvent(ExpensesListEvent.AddExpensesClick) }) {
                 Icon(Icons.Default.Add, contentDescription = "Add expense")
             }
         }
     ) { innerPadding ->
+        ExpensesListEffectHandler(
+            effects = viewModel.effects,
+            navController = navController
+        )
+
         ExpensesListScreen(
             modifier = modifier.padding(innerPadding),
-            state = state
+            state = state,
+            onEvent = viewModel::onEvent
         )
     }
 }

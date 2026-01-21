@@ -1,21 +1,17 @@
 package com.example.expensetracker.presentation.expenses.list
 
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.toColorLong
-import androidx.core.graphics.toColorInt
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.expensetracker.data.local.entity.ExpenseEntity
 import com.example.expensetracker.data.repository.ExpenseRepository
-import com.example.expensetracker.domain.model.Category
 import com.example.expensetracker.domain.model.Expense
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
-import java.time.LocalDate
+import kotlinx.coroutines.launch
 import java.time.YearMonth
 import javax.inject.Inject
 
@@ -23,6 +19,9 @@ import javax.inject.Inject
 class ExpensesListViewModel @Inject constructor(
     repository: ExpenseRepository
 ) : ViewModel() {
+
+    private val _effects = Channel<ExpensesListEffect>()
+    val effects = _effects.receiveAsFlow()
 
     val expenses: StateFlow<List<Expense>> =
         repository.getAllExpenses()
@@ -61,6 +60,15 @@ class ExpensesListViewModel @Inject constructor(
 
     fun calculateTotal(expenses: List<Expense>): Double =
         expenses.sumOf { it.amount }
+
+    fun onEvent(event: ExpensesListEvent) {
+        when (event) {
+            ExpensesListEvent.AddExpensesClick ->
+                viewModelScope.launch {
+                    _effects.send(ExpensesListEffect.NavigateToAddExpense)
+                }
+        }
+    }
 
 }
 
