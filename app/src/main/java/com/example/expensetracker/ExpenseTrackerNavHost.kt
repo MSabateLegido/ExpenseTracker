@@ -11,6 +11,8 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.example.expensetracker.presentation.categories.AddCategoryRoute
+import com.example.expensetracker.presentation.categories.AddCategoryScreen
 import com.example.expensetracker.presentation.expenses.add.AddExpenseRoute
 import com.example.expensetracker.presentation.expenses.list.ExpensesListRoute
 import com.example.expensetracker.utils.Routes
@@ -27,20 +29,18 @@ fun ExpenseTrackerNavHost(
 
         composable(Routes.DASHBOARD) {
             ExpensesListRoute(
-                onAddExpense = {
-                    navController.navigate(Routes.ADD_EXPENSE)
-                }
+                navController = navController
             )
         }
 
         composable(Routes.ADD_EXPENSE) {
-            AddExpenseRoute()
+            AddExpenseRoute(
+                navController = navController
+            )
         }
 
         composable(Routes.ADD_CATEGORY) {
-            /*AddCategoryScreen(
-                onBack = { navController.popBackStack() }
-            )*/
+            AddCategoryRoute()
         }
 
         composable(Routes.CATEGORIES) {

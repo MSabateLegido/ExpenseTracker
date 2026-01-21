@@ -8,4 +8,5 @@ sealed interface AddExpenseEvent {
     data class AmountChanged(val value: String) : AddExpenseEvent
     data class SubcategorySelected(val subcategory: Subcategory) : AddExpenseEvent
     object SaveClicked : AddExpenseEvent
+    object AddCategoryClicked : AddExpenseEvent
 }

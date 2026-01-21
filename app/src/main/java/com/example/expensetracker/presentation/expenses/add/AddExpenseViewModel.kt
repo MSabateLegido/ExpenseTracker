@@ -5,11 +5,14 @@ import androidx.lifecycle.viewModelScope
 import com.example.expensetracker.domain.model.Expense
 import com.example.expensetracker.domain.usecase.category.GetSubcategoriesGroupedByCategoryUseCase
 import com.example.expensetracker.domain.usecase.expense.AddExpenseUseCase
+import com.example.expensetracker.presentation.expenses.list.ExpensesListEffect
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -21,6 +24,9 @@ class AddExpenseViewModel @Inject constructor(
     private val getCategoriesWithSubcategories: GetSubcategoriesGroupedByCategoryUseCase,
     private val addExpenseUseCase: AddExpenseUseCase
 ) : ViewModel() {
+
+    private val _effects = Channel<AddExpenseEffect>()
+    val effects = _effects.receiveAsFlow()
 
     private val formState = MutableStateFlow(AddExpenseState())
 
@@ -49,6 +55,11 @@ class AddExpenseViewModel @Inject constructor(
 
             AddExpenseEvent.SaveClicked ->
                 saveExpense()
+
+            AddExpenseEvent.AddCategoryClicked ->
+                viewModelScope.launch {
+                    _effects.send(AddExpenseEffect.NavigateToCategories)
+                }
         }
     }
 

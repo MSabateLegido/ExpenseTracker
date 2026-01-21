@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.Flow
 interface SubcategoryDao {
 
     @Insert
-    suspend fun insert(subcategory: SubcategoryEntity)
+    suspend fun insert(subcategory: SubcategoryEntity): Long
 
     @Update
     suspend fun update(subcategory: SubcategoryEntity)
