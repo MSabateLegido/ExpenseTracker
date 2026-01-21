@@ -1,5 +1,6 @@
 package com.example.expensetracker.presentation.expenses.list
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -33,6 +34,7 @@ import java.time.YearMonth
 import java.time.format.DateTimeFormatter
 import java.time.format.TextStyle
 import java.util.Locale
+import kotlin.math.exp
 
 
 @Composable
@@ -53,6 +55,7 @@ fun ExpensesListScreen(
                 items = month.expenses,
                 key = { it.id }
             ) { expense ->
+                Log.i("Expense", expense.toString())
                 ExpenseItem(expense)
             }
         }
