@@ -1,5 +1,6 @@
 package com.example.expensetracker.presentation.categories
 
+import android.view.Surface
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -14,6 +15,7 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -42,6 +44,7 @@ import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Slider
 import androidx.compose.material3.SliderDefaults
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
@@ -79,7 +82,26 @@ fun AddCategoryScreen(
             TopAppBar(
                 title = { Text("Afegir categoria") }
             )
+        },
+        bottomBar = {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .navigationBarsPadding()
+                    .padding(16.dp)
+            ) {
+                Button(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(52.dp),
+                    enabled = state.isSaveEnabled,
+                    onClick = { onEvent(AddCategoryEvent.SaveClicked) }
+                ) {
+                    Text("Guardar")
+                }
+            }
         }
+
     ) { paddingValues ->
 
         val scrollState = rememberScrollState()
@@ -87,8 +109,7 @@ fun AddCategoryScreen(
         Column(
             modifier = Modifier
                 .padding(paddingValues)
-                .padding(16.dp)
-                .fillMaxSize()
+                .padding(horizontal = 16.dp)
                 .verticalScroll(scrollState),
             verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
@@ -188,21 +209,6 @@ fun AddCategoryScreen(
                         }
                     )
                 }
-            }
-
-            Spacer(modifier = Modifier.weight(1f))
-
-            // ─────────────────────────────────────
-            // Botó Guardar
-            // ─────────────────────────────────────
-            Button(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(52.dp),
-                enabled = state.isSaveEnabled,
-                onClick = { onEvent(AddCategoryEvent.SaveClicked) }
-            ) {
-                Text("Guardar")
             }
         }
     }

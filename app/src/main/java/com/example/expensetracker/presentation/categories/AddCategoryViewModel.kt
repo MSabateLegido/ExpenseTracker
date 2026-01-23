@@ -8,11 +8,14 @@ import com.example.expensetracker.domain.model.Subcategory
 import com.example.expensetracker.domain.usecase.category.AddSubcategoryUseCase
 import com.example.expensetracker.domain.usecase.category.CreateCategoryWithSubcategoryUseCase
 import com.example.expensetracker.domain.usecase.category.GetCategoriesUseCase
+import com.example.expensetracker.presentation.expenses.add.AddExpenseEffect
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -26,6 +29,8 @@ class AddCategoryViewModel @Inject constructor(
     private val getCategoriesUseCase: GetCategoriesUseCase
 ) : ViewModel() {
 
+    private val _effects = Channel<AddCategoryEffect>()
+    val effects = _effects.receiveAsFlow()
     private val formState = MutableStateFlow(AddCategoryState())
 
     val state: StateFlow<AddCategoryState> =
@@ -44,7 +49,12 @@ class AddCategoryViewModel @Inject constructor(
     fun onEvent(event: AddCategoryEvent) {
         when (event) {
             is AddCategoryEvent.CategoryColorChanged ->
-                formState.update { it.copy(categoryColor = event.color) }
+                formState.update {
+                    it.copy(
+                        categoryColor = event.color,
+                        subcategoryColor = event.color
+                    )
+                }
 
             is AddCategoryEvent.CategoryNameChanged ->
                 formState.update { it.copy(categoryName = event.name) }
@@ -59,7 +69,8 @@ class AddCategoryViewModel @Inject constructor(
                 formState.update {
                     it.copy(
                         categoryParent = event.category,
-                        isNewCategory = false
+                        isNewCategory = false,
+                        subcategoryColor = event.category.color
                     )
                 }
 
@@ -71,8 +82,12 @@ class AddCategoryViewModel @Inject constructor(
                     )
                 }
 
-            AddCategoryEvent.SaveClicked ->
+            AddCategoryEvent.SaveClicked -> {
                 saveCategory()
+                viewModelScope.launch {
+                    _effects.send(AddCategoryEffect.NavigateBack)
+                }
+            }
         }
     }
 

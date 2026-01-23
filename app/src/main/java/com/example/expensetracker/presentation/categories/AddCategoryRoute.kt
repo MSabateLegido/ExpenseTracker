@@ -45,6 +45,12 @@ fun AddCategoryRoute(
             )
         }
     ) { innerPadding ->
+
+        AddCategoryEffectHandler(
+            effects = viewModel.effects,
+            navController = navController
+        )
+
         AddCategoryScreen(
             modifier = modifier.padding(innerPadding),
             state = state,
