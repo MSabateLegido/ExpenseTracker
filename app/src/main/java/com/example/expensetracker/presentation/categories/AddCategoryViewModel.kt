@@ -56,10 +56,20 @@ class AddCategoryViewModel @Inject constructor(
                 formState.update { it.copy(subcategoryColor = event.color) }
 
             is AddCategoryEvent.ExistingCategorySelected ->
-                formState.update { it.copy(categoryParent = event.category) }
+                formState.update {
+                    it.copy(
+                        categoryParent = event.category,
+                        isNewCategory = false
+                    )
+                }
 
             AddCategoryEvent.NewCategorySelected ->
-                formState.update { it.copy(isNewCategory = true) }
+                formState.update {
+                    it.copy(
+                        categoryParent = null,
+                        isNewCategory = true
+                    )
+                }
 
             AddCategoryEvent.SaveClicked ->
                 saveCategory()

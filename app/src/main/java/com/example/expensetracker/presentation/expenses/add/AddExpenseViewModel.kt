@@ -24,10 +24,8 @@ class AddExpenseViewModel @Inject constructor(
     private val getCategoriesWithSubcategories: GetSubcategoriesGroupedByCategoryUseCase,
     private val addExpenseUseCase: AddExpenseUseCase
 ) : ViewModel() {
-
     private val _effects = Channel<AddExpenseEffect>()
     val effects = _effects.receiveAsFlow()
-
     private val formState = MutableStateFlow(AddExpenseState())
 
     val state: StateFlow<AddExpenseState> =
@@ -82,7 +80,6 @@ class AddExpenseViewModel @Inject constructor(
                 )
             )
 
-            // Opcional: reset del formulari
             formState.value = AddExpenseState()
         }
     }

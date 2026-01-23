@@ -40,7 +40,9 @@ fun ExpenseTrackerNavHost(
         }
 
         composable(Routes.ADD_CATEGORY) {
-            AddCategoryRoute()
+            AddCategoryRoute(
+                navController = navController
+            )
         }
 
         composable(Routes.CATEGORIES) {
