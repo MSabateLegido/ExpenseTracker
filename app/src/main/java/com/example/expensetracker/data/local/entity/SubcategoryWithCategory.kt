@@ -1,5 +1,6 @@
 package com.example.expensetracker.data.local.entity
 
+import androidx.compose.ui.graphics.Color
 import androidx.room.Embedded
 import androidx.room.Relation
 import com.example.expensetracker.domain.model.Subcategory
@@ -17,7 +18,7 @@ fun SubcategoryWithCategory.toUi(): Subcategory =
     Subcategory(
         id = subcategory.id,
         name = subcategory.name,
-        color = subcategory.color,
+        color = Color(subcategory.color),
         category = category.toUi()
     )
 

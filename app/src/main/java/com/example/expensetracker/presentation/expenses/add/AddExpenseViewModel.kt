@@ -51,8 +51,12 @@ class AddExpenseViewModel @Inject constructor(
             is AddExpenseEvent.SubcategorySelected ->
                 formState.update { it.copy(selectedSubcategory = event.subcategory) }
 
-            AddExpenseEvent.SaveClicked ->
+            AddExpenseEvent.SaveClicked -> {
                 saveExpense()
+                viewModelScope.launch {
+                    _effects.send(AddExpenseEffect.NavigateBack)
+                }
+            }
 
             AddExpenseEvent.AddCategoryClicked ->
                 viewModelScope.launch {

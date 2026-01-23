@@ -17,6 +17,9 @@ fun AddExpenseEffectHandler(
                 AddExpenseEffect.NavigateToCategories -> {
                     navController.navigate(Routes.ADD_CATEGORY)
                 }
+                AddExpenseEffect.NavigateBack -> {
+                    navController.navigateUp()
+                }
             }
         }
     }

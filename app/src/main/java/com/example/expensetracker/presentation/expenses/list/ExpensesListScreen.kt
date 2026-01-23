@@ -84,7 +84,7 @@ fun ExpenseItem(expense: Expense) {
             Text(
                 text = expense.category.name,
                 style = MaterialTheme.typography.bodySmall,
-                color = Color(expense.category.color)
+                color = expense.category.color
             )
         }
 
