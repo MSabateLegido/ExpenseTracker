@@ -1,6 +1,8 @@
 package com.example.expensetracker.domain.model
 
-import android.graphics.Color
+
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import com.example.expensetracker.data.local.entity.CategoryEntity
 
 data class Category(

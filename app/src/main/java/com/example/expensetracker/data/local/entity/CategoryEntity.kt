@@ -1,6 +1,6 @@
 package com.example.expensetracker.data.local.entity
 
-import androidx.core.graphics.toColor
+import androidx.compose.ui.graphics.Color
 import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
@@ -22,7 +22,7 @@ fun CategoryEntity.toUi(): Category =
     Category(
         id = id,
         name = name,
-        color = color.toColor()
+        color = Color(color)
     )
 
 

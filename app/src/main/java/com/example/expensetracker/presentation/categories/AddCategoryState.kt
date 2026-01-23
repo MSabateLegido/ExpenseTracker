@@ -12,4 +12,15 @@ data class AddCategoryState (
     val categoryName: String = "",
     val categoryColor: Color = Color.Unspecified,
     val isNewCategory: Boolean = false
-)
+) {
+    val isSaveEnabled: Boolean
+        get() {
+            val subcategoryValid = subcategoryName.isNotBlank() && subcategoryColor != Color.Unspecified
+
+            return if (isNewCategory) {
+                categoryName.isNotBlank() && categoryColor != Color.Unspecified && subcategoryValid
+            } else {
+                categoryParent != null && subcategoryValid
+            }
+        }
+}
