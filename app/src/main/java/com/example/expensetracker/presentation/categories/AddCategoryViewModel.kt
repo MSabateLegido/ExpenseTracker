@@ -113,7 +113,7 @@ class AddCategoryViewModel @Inject constructor(
                 addSubcategoryUseCase(
                     Subcategory(
                         name = s.subcategoryName,
-                        color = s.subcategoryColor.toArgb(),
+                        color = s.subcategoryColor,
                         category = s.categoryParent?: return@launch
                     )
                 )

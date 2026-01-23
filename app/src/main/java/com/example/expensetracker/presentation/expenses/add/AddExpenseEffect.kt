@@ -4,4 +4,6 @@ sealed interface AddExpenseEffect {
 
     object NavigateToCategories : AddExpenseEffect
 
+    object NavigateBack : AddExpenseEffect
+
 }

@@ -32,10 +32,12 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
+import androidx.compose.material3.DividerDefaults
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
@@ -109,14 +111,11 @@ fun AddCategoryScreen(
         Column(
             modifier = Modifier
                 .padding(paddingValues)
-                .padding(horizontal = 16.dp)
+                .padding(horizontal = 16.dp, vertical = 16.dp)
                 .verticalScroll(scrollState),
             verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
 
-            // ─────────────────────────────────────
-            // Categoria pare
-            // ─────────────────────────────────────
             Card(
                 modifier = Modifier.fillMaxWidth(),
                 colors = CardDefaults.cardColors(
@@ -141,9 +140,6 @@ fun AddCategoryScreen(
                 }
             }
 
-            // ─────────────────────────────────────
-            // Nova categoria (només si cal)
-            // ─────────────────────────────────────
             if (state.isNewCategory) {
                 Card(
                     modifier = Modifier.fillMaxWidth()
@@ -177,9 +173,6 @@ fun AddCategoryScreen(
                 }
             }
 
-            // ─────────────────────────────────────
-            // Subcategoria
-            // ─────────────────────────────────────
             Card(
                 modifier = Modifier.fillMaxWidth()
             ) {
@@ -281,7 +274,10 @@ fun CategorySelector(
                     )
                 }
 
-                Divider()
+                HorizontalDivider(
+                    modifier = Modifier.padding(vertical = 8.dp),
+                    thickness = DividerDefaults.Thickness, color = DividerDefaults.color
+                )
 
                 DropdownMenuItem(
                     text = {
@@ -420,73 +416,6 @@ fun ColorPickerField(
         )
     }
 }
-
-@Composable
-fun ColorPickerDialog2(
-    initialColor: Color,
-    onDismiss: () -> Unit,
-    onConfirm: (Color) -> Unit
-) {
-    var hsv by remember {
-        mutableStateOf(FloatArray(3).also {
-            android.graphics.Color.colorToHSV(initialColor.toArgb(), it)
-        })
-    }
-
-    val selectedColor = Color(android.graphics.Color.HSVToColor(hsv))
-
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        title = { Text("Selecciona un color") },
-        text = {
-            Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
-
-                // 🎨 Hue slider
-                Text("Tonalitat")
-                Slider(
-                    value = hsv[0],
-                    onValueChange = { newValue ->  hsv = hsv.copyOf().also { it[0] = newValue } },
-                    valueRange = 0f..360f
-                )
-
-                // 🎚 Saturation
-                Text("Saturació")
-                Slider(
-                    value = hsv[1],
-                    onValueChange = { newValue ->  hsv = hsv.copyOf().also { it[1] = newValue } },
-                    valueRange = 0f..1f
-                )
-
-                // ☀ Value / Lightness
-                Text("Lluminositat")
-                Slider(
-                    value = hsv[2],
-                    onValueChange = { newValue -> hsv = hsv.copyOf().also { it[2] = newValue } },
-                    valueRange = 0f..1f
-                )
-
-                // 👁 Preview
-                Box(
-                    modifier = Modifier
-                        .size(48.dp)
-                        .background(selectedColor, CircleShape)
-                        .align(Alignment.CenterHorizontally)
-                )
-            }
-        },
-        confirmButton = {
-            TextButton(onClick = { onConfirm(selectedColor) }) {
-                Text("OK")
-            }
-        },
-        dismissButton = {
-            TextButton(onClick = onDismiss) {
-                Text("Cancel·lar")
-            }
-        }
-    )
-}
-
 
 @Composable
 fun HueSlider(
