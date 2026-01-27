@@ -22,6 +22,7 @@ fun ExpensesListRoute(
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     Scaffold(
+        topBar = { ExpensesTopBar("Despeses") },
         floatingActionButton = {
             FloatingActionButton(onClick = { viewModel.onEvent(ExpensesListEvent.AddExpensesClick) }) {
                 Icon(Icons.Default.Add, contentDescription = "Add expense")
@@ -40,3 +41,5 @@ fun ExpensesListRoute(
         )
     }
 }
+
+

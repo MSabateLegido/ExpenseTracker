@@ -4,7 +4,8 @@ import com.example.expensetracker.domain.model.Expense
 import java.time.YearMonth
 
 data class ExpensesListState(
-    val months: List<ExpensesMonth> = emptyList()
+    val months: List<ExpensesMonth> = emptyList(),
+    val expandedMonth: YearMonth? = null
 )
 
 data class ExpensesMonth(
