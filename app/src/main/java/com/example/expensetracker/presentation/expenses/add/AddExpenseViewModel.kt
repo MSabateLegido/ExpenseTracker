@@ -18,6 +18,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import javax.inject.Inject
+import kotlin.random.Random
 
 @HiltViewModel
 class AddExpenseViewModel @Inject constructor(
@@ -51,6 +52,17 @@ class AddExpenseViewModel @Inject constructor(
             is AddExpenseEvent.SubcategorySelected ->
                 formState.update { it.copy(selectedSubcategory = event.subcategory) }
 
+            is AddExpenseEvent.AddDummyExpense -> {
+                formState.update {
+                    it.copy(
+                        name = "Dummy ${(0..500).random()}",
+                        amount = 1000.01f.toString(),//Random.nextFloat().toString(),
+                        selectedSubcategory = event.categories.random().subcategories.random()
+                    )
+                }
+                saveExpense()
+            }
+
             AddExpenseEvent.SaveClicked -> {
                 saveExpense()
                 viewModelScope.launch {
@@ -62,6 +74,7 @@ class AddExpenseViewModel @Inject constructor(
                 viewModelScope.launch {
                     _effects.send(AddExpenseEffect.NavigateToCategories)
                 }
+
         }
     }
 

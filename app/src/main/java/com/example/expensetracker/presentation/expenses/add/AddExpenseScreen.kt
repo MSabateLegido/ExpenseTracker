@@ -69,7 +69,13 @@ fun AddExpenseScreen(
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-
+        Button(
+            onClick = {
+                onEvent(AddExpenseEvent.AddDummyExpense(state.categories))
+            }
+        ) {
+            Text("Add Dummy Expanse")
+        }
         // ===== CARD: DESPESA =====
         Card(
             modifier = Modifier.fillMaxWidth(),

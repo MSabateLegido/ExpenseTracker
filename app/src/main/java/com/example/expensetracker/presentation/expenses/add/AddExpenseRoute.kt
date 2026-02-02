@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import com.example.expensetracker.presentation.utils.ExpenseTrackerTopbar
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -29,20 +30,8 @@ fun AddExpenseRoute(
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = {
-                    Text("Afegir Despesa")
-                },
-                navigationIcon = {
-                    IconButton(
-                        onClick = { navController.navigateUp() }
-                    ) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Tornar"
-                        )
-                    }
-                }
+            ExpenseTrackerTopbar(
+                onClick = { navController.navigateUp() }
             )
         }
     ) { innerPadding ->

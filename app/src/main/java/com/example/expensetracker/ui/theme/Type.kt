@@ -13,15 +13,22 @@ val Typography = Typography(
     // Títols grans (TopBar)
     titleLarge = TextStyle(
         fontFamily = Inter,
-        fontWeight = FontWeight.SemiBold,
-        fontSize = 22.sp,
+        fontWeight = FontWeight.Bold,
+        fontSize = 30.sp,
         color = Color(0xFFE7E7E7)
     ),
 
     // Títols mitjans (Mesos)
     titleMedium = TextStyle(
         fontFamily = Inter,
-        fontWeight = FontWeight.SemiBold,
+        fontWeight = FontWeight.Bold,
+        fontSize = 24.sp,
+        color = Color(0xFFE7E7E7)
+    ),
+
+    titleSmall = TextStyle(
+        fontFamily = Inter,
+        fontWeight = FontWeight.Bold,
         fontSize = 18.sp,
         color = Color(0xFFE7E7E7)
     ),

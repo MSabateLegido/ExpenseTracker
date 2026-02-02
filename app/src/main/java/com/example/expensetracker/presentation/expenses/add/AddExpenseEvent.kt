@@ -9,4 +9,5 @@ sealed interface AddExpenseEvent {
     data class SubcategorySelected(val subcategory: Subcategory) : AddExpenseEvent
     object SaveClicked : AddExpenseEvent
     object AddCategoryClicked : AddExpenseEvent
+    data class AddDummyExpense(val categories: List<CategoryWithChildren>): AddExpenseEvent
 }

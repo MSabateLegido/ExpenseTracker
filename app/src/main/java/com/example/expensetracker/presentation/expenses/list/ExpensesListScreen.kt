@@ -21,6 +21,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -32,10 +33,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusTargetModifierNode
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
+import androidx.compose.ui.input.nestedscroll.NestedScrollSource
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalWindowInfo
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.expensetracker.domain.model.Expense
 import java.time.YearMonth
@@ -100,8 +107,16 @@ fun MonthItem(
             if (expanded) {
                 Spacer(modifier = Modifier.height(12.dp))
 
-                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    month.expenses.forEach { expense ->
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .heightIn(max = 350.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    items(
+                        items = month.expenses,
+                        key = { it.id }
+                    ) { expense ->
                         ExpenseItem(expense)
                     }
                 }
@@ -118,6 +133,7 @@ fun MonthHeader(
 ) {
     Row(
         modifier = Modifier
+            .padding(8.dp)
             .fillMaxWidth()
             .clickable(onClick = onClick),
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -126,23 +142,27 @@ fun MonthHeader(
 
         Column {
             Text(
+                modifier = Modifier.padding(bottom = 8.dp),
                 text = month.month.formatMonthYear(),
-                style = MaterialTheme.typography.titleMedium
+                style = MaterialTheme.typography.titleMedium,
+                textAlign = TextAlign.Start
             )
+
             Text(
                 text = formatAmount(month.total),
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.primary
+                style = MaterialTheme.typography.titleSmall,
+                color = MaterialTheme.colorScheme.primary,
+                textAlign = TextAlign.End
             )
         }
+
 
         Icon(
             imageVector = if (expanded)
                 Icons.Default.KeyboardArrowUp
             else
                 Icons.Default.KeyboardArrowDown,
-            contentDescription = null,
-            tint = MaterialTheme.colorScheme.onSurfaceVariant
+            contentDescription = null
         )
     }
 }
@@ -169,8 +189,7 @@ fun ExpenseItem(expense: Expense) {
             )
             Text(
                 text = expense.date.format(DateTimeFormatter.ofPattern("dd/MM")),
-                style = MaterialTheme.typography.labelSmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                style = MaterialTheme.typography.labelSmall
             )
         }
     }
