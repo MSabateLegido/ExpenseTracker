@@ -7,12 +7,12 @@ val PurpleGrey80 = Color(0xFFCCC2DC)
 val Pink80 = Color(0xFFEFB8C8)
 
 // Primary (accent principal)
-val GreenPrimary = Color(0xFF2E7D32)
-val GreenPrimaryContainer = Color(0xFFC8E6C9)
+val GreenPrimary = Color(0xFF6CE7EC)
+val GreenPrimaryContainer = Color(0xFFB4FFE6)
 
 // Secondary (accent secundari)
-val BlueSecondary = Color(0xFF006D77)
-val BlueSecondaryContainer = Color(0xFFB2EBF2)
+val BlueSecondary = Color(0xFF83FFB7)
+val BlueSecondaryContainer = Color(0xFFDFFFE0)
 
 // Tertiary (detalls / highlights puntuals)
 val AmberTertiary = Color(0xFFFFB300)
@@ -20,3 +20,7 @@ val AmberTertiary = Color(0xFFFFB300)
 // Backgrounds & surfaces
 val AppBackground = Color(0xFF181818)
 val AppSurface = Color(0xFF505050)
+
+val AppSurfaceVariant = Color(0xFF3F3F3F)
+
+val AppOutline = Color(0xFFE1E1E1)

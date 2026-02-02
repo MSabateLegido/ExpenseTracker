@@ -38,10 +38,10 @@ private val LightColorScheme = lightColorScheme(
     surface = AppSurface,
     onSurface = Color(0xFF1C1B1F),
 
-    surfaceVariant = Color(0xFFE1E5EA),
+    surfaceVariant = AppSurfaceVariant,
     onSurfaceVariant = Color(0xFF44474E),
 
-    outline = Color(0xFFB0B7C3)
+    outline = AppOutline
 )
 
 /*private val LightColorScheme = lightColorScheme(

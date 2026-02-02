@@ -1,7 +1,6 @@
 package com.example.expensetracker.presentation.expenses.add
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -18,18 +17,16 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Divider
 import androidx.compose.material3.DividerDefaults
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
-import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -168,7 +165,10 @@ fun AddExpenseScreen(
             enabled = state.name.isNotBlank()
                     && state.amount.isNotBlank()
                     && state.selectedSubcategory != null
-                    && !state.isSaving
+                    && !state.isSaving,
+            colors = ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.onSurfaceVariant
+            )
         ) {
             Text(
                 text = "Guardar despesa",
@@ -205,7 +205,14 @@ fun CategorySelectorDropdown(
             onValueChange = {},
             label = { Text("Categoria") },
             trailingIcon = {
-                ExposedDropdownMenuDefaults.TrailingIcon(expanded)
+                Icon(
+                    imageVector = if (expanded)
+                        Icons.Default.KeyboardArrowUp
+                    else
+                        Icons.Default.KeyboardArrowDown,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.outline
+                )
             }
         )
 
@@ -238,14 +245,16 @@ fun CategorySelectorDropdown(
                             Text(
                                 text = categoryWithChildren.category.name,
                                 modifier = Modifier.weight(1f),
-                                fontWeight = FontWeight.SemiBold
+                                fontWeight = FontWeight.SemiBold,
+                                style = MaterialTheme.typography.bodySmall
                             )
                             Icon(
                                 imageVector = if (isExpanded)
                                     Icons.Default.KeyboardArrowUp
                                 else
                                     Icons.Default.KeyboardArrowDown,
-                                contentDescription = null
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.tertiary
                             )
                         }
                     }
@@ -266,7 +275,10 @@ fun CategorySelectorDropdown(
                                 ) {
                                     ColorDot(subcategory.color)
                                     Spacer(Modifier.width(8.dp))
-                                    Text(subcategory.name)
+                                    Text(
+                                        text = subcategory.name,
+                                        style = MaterialTheme.typography.bodySmall
+                                    )
                                 }
                             }
                         )
