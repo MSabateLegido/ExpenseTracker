@@ -69,18 +69,18 @@ fun AddExpenseScreen(
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        Button(
+        /*Button(
             onClick = {
                 onEvent(AddExpenseEvent.AddDummyExpense(state.categories))
             }
         ) {
             Text("Add Dummy Expanse")
-        }
+        }*/
         // ===== CARD: DESPESA =====
         Card(
             modifier = Modifier.fillMaxWidth(),
             colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.surfaceVariant
+                containerColor = MaterialTheme.colorScheme.surface
             )
         ) {
             Column(
@@ -134,7 +134,7 @@ fun AddExpenseScreen(
         Card(
             modifier = Modifier.fillMaxWidth(),
             colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.surfaceVariant
+                containerColor = MaterialTheme.colorScheme.surface
             )
         ) {
             Column(
@@ -171,10 +171,7 @@ fun AddExpenseScreen(
             enabled = state.name.isNotBlank()
                     && state.amount.isNotBlank()
                     && state.selectedSubcategory != null
-                    && !state.isSaving,
-            colors = ButtonDefaults.buttonColors(
-                containerColor = MaterialTheme.colorScheme.onSurfaceVariant
-            )
+                    && !state.isSaving
         ) {
             Text(
                 text = "Guardar despesa",
@@ -216,8 +213,7 @@ fun CategorySelectorDropdown(
                         Icons.Default.KeyboardArrowUp
                     else
                         Icons.Default.KeyboardArrowDown,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.outline
+                    contentDescription = null
                 )
             }
         )
