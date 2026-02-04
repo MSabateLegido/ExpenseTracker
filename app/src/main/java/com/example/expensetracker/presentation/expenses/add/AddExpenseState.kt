@@ -11,7 +11,12 @@ data class AddExpenseState(
     val categories: List<CategoryWithChildren> = emptyList(),
     val isSaving: Boolean = false,
     val error: String? = null
-)
+) {
+    val isSaveEnabled: Boolean = name.isNotBlank()
+            && amount.isNotBlank()
+            && selectedSubcategory != null
+            && !isSaving
+}
 
 data class CategoryWithChildren (
     val category: Category,

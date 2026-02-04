@@ -79,100 +79,39 @@ fun AddCategoryScreen(
     state: AddCategoryState,
     onEvent: (AddCategoryEvent) -> Unit
 ) {
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text("Afegir categoria") }
+    val scrollState = rememberScrollState()
+
+    Column(
+        modifier = modifier
+            .verticalScroll(scrollState),
+        verticalArrangement = Arrangement.spacedBy(20.dp)
+    ) {
+
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.surface
             )
-        },
-        bottomBar = {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .navigationBarsPadding()
-                    .padding(16.dp)
+        ) {
+            Column(
+                modifier = Modifier.padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                Button(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(52.dp),
-                    enabled = state.isSaveEnabled,
-                    onClick = { onEvent(AddCategoryEvent.SaveClicked) }
-                ) {
-                    Text("Guardar")
-                }
+                CategorySelector(
+                    categories = state.categories,
+                    selectedCategory = state.categoryParent,
+                    isNewCategory = state.isNewCategory,
+                    onExistingSelected = {
+                        onEvent(AddCategoryEvent.ExistingCategorySelected(it))
+                    },
+                    onNewCategorySelected = {
+                        onEvent(AddCategoryEvent.NewCategorySelected)
+                    }
+                )
             }
         }
 
-    ) { paddingValues ->
-
-        val scrollState = rememberScrollState()
-        
-        Column(
-            modifier = Modifier
-                .padding(paddingValues)
-                .padding(horizontal = 16.dp, vertical = 16.dp)
-                .verticalScroll(scrollState),
-            verticalArrangement = Arrangement.spacedBy(20.dp)
-        ) {
-
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.surfaceVariant
-                )
-            ) {
-                Column(
-                    modifier = Modifier.padding(16.dp),
-                    verticalArrangement = Arrangement.spacedBy(12.dp)
-                ) {
-                    CategorySelector(
-                        categories = state.categories,
-                        selectedCategory = state.categoryParent,
-                        isNewCategory = state.isNewCategory,
-                        onExistingSelected = {
-                            onEvent(AddCategoryEvent.ExistingCategorySelected(it))
-                        },
-                        onNewCategorySelected = {
-                            onEvent(AddCategoryEvent.NewCategorySelected)
-                        }
-                    )
-                }
-            }
-
-            if (state.isNewCategory) {
-                Card(
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Column(
-                        modifier = Modifier.padding(16.dp),
-                        verticalArrangement = Arrangement.spacedBy(12.dp)
-                    ) {
-                        Text(
-                            text = "Nova categoria",
-                            style = MaterialTheme.typography.titleMedium
-                        )
-
-                        Text(
-                            text = "Defineix la categoria pare abans d’afegir la subcategoria",
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-
-                        NewCategoryFields(
-                            name = state.categoryName,
-                            selectedColor = state.categoryColor,
-                            onNameChanged = {
-                                onEvent(AddCategoryEvent.CategoryNameChanged(it))
-                            },
-                            onColorSelected = {
-                                onEvent(AddCategoryEvent.CategoryColorChanged(it))
-                            }
-                        )
-                    }
-                }
-            }
-
+        if (state.isNewCategory) {
             Card(
                 modifier = Modifier.fillMaxWidth()
             ) {
@@ -181,30 +120,72 @@ fun AddCategoryScreen(
                     verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
                     Text(
-                        text = "Subcategoria",
+                        text = "Nova categoria",
                         style = MaterialTheme.typography.titleMedium
                     )
 
                     Text(
-                        text = "És la categoria que assignaràs a les despeses",
+                        text = "Defineix la categoria pare abans d’afegir la subcategoria",
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
 
-                    SubcategoryFields(
-                        name = state.subcategoryName,
-                        selectedColor = state.subcategoryColor,
+                    NewCategoryFields(
+                        name = state.categoryName,
+                        selectedColor = state.categoryColor,
                         onNameChanged = {
-                            onEvent(AddCategoryEvent.SubcategoryNameChanged(it))
+                            onEvent(AddCategoryEvent.CategoryNameChanged(it))
                         },
                         onColorSelected = {
-                            onEvent(AddCategoryEvent.SubcategoryColorChanged(it))
+                            onEvent(AddCategoryEvent.CategoryColorChanged(it))
                         }
                     )
                 }
             }
         }
+
+        Card(
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Column(
+                modifier = Modifier.padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                Text(
+                    text = "Subcategoria",
+                    style = MaterialTheme.typography.titleMedium
+                )
+
+                Text(
+                    text = "És la categoria que assignaràs a les despeses",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+
+                SubcategoryFields(
+                    name = state.subcategoryName,
+                    selectedColor = state.subcategoryColor,
+                    onNameChanged = {
+                        onEvent(AddCategoryEvent.SubcategoryNameChanged(it))
+                    },
+                    onColorSelected = {
+                        onEvent(AddCategoryEvent.SubcategoryColorChanged(it))
+                    }
+                )
+            }
+        }
+
+        Button(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(52.dp),
+            enabled = state.isSaveEnabled,
+            onClick = { onEvent(AddCategoryEvent.SaveClicked) }
+        ) {
+            Text("Guardar")
+        }
     }
+
 }
 
 

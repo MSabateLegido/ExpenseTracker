@@ -160,7 +160,7 @@ fun AddExpenseScreen(
             }
         }
 
-        Spacer(modifier = Modifier.weight(1f))
+        Spacer(modifier = Modifier.weight(0.5f))
 
         // ===== BOTÓ GUARDAR =====
         Button(
@@ -168,14 +168,11 @@ fun AddExpenseScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(52.dp),
-            enabled = state.name.isNotBlank()
-                    && state.amount.isNotBlank()
-                    && state.selectedSubcategory != null
-                    && !state.isSaving
+            enabled = state.isSaveEnabled
         ) {
             Text(
                 text = "Guardar despesa",
-                style = MaterialTheme.typography.titleMedium
+                style = MaterialTheme.typography.titleSmall
             )
         }
     }
