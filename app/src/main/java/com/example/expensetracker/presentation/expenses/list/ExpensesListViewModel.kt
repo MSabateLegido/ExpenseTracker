@@ -79,15 +79,15 @@ class ExpensesListViewModel @Inject constructor(
             }
 
             is ExpensesListEvent.DeleteExpense -> {
-                TODO()
+
             }
 
             is ExpensesListEvent.DuplicateExpense -> {
-                TODO()
+
             }
 
             is ExpensesListEvent.EditExpense -> {
-                TODO()
+
             }
 
             ExpensesListEvent.AddExpensesClick ->

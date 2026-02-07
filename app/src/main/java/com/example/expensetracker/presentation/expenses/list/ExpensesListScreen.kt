@@ -90,9 +90,7 @@ fun ExpensesListScreen(
             MonthItem(
                 month = month,
                 expanded = state.expandedMonth == month.month,
-                onHeaderClick = {
-                    onEvent(ExpensesListEvent.ToggleMonth(month.month))
-                }
+                onEvent = onEvent
             )
         }
     }
@@ -102,7 +100,7 @@ fun ExpensesListScreen(
 fun MonthItem(
     month: ExpensesMonth,
     expanded: Boolean,
-    onHeaderClick: () -> Unit
+    onEvent: (ExpensesListEvent) -> Unit
 ) {
 
     val blockParentScroll = rememberBlockParentScrollConnection()
@@ -127,7 +125,7 @@ fun MonthItem(
             MonthHeader(
                 month = month,
                 expanded = expanded,
-                onClick = onHeaderClick
+                onClick = { onEvent(ExpensesListEvent.ToggleMonth(month.month)) }
             )
 
             if (expanded) {
@@ -147,7 +145,10 @@ fun MonthItem(
                         key = { it.id }
                     ) { expense ->
                         ExpenseItem(
-                            expense = expense
+                            expense = expense,
+                            onDelete = { onEvent(ExpensesListEvent.DeleteExpense(expense.id)) },
+                            onDuplicate = { onEvent(ExpensesListEvent.DuplicateExpense(expense.id)) },
+                            onEdit = { onEvent(ExpensesListEvent.EditExpense(expense.id)) }
                         )
                     }
                 }
@@ -200,32 +201,59 @@ fun MonthHeader(
 @Composable
 fun ExpenseItem(
     expense: Expense,
-    modifier: Modifier = Modifier
+    onDelete: () -> Unit,
+    onDuplicate: () -> Unit,
+    onEdit: () -> Unit
 ) {
-    Row(
-        modifier = modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween
-    ) {
-        Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-            Text(expense.title, style = MaterialTheme.typography.bodyLarge)
-            CategoryPill(
-                name = expense.category.name,
-                color = expense.category.color
-            )
-        }
+    val actionWidth = 180.dp
+    val actionWidthPx = with(LocalDensity.current) { actionWidth.toPx() }
 
-        Column(horizontalAlignment = Alignment.End) {
-            Text(
-                text = formatAmount(expense.amount),
-                style = MaterialTheme.typography.bodyLarge
-            )
-            Text(
-                text = expense.date.format(DateTimeFormatter.ofPattern("dd/MM")),
-                style = MaterialTheme.typography.labelSmall
-            )
-        }
+    val offsetX = remember { Animatable(0f) }
+    val coroutineScope = rememberCoroutineScope()
+
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+    ) {
+        // Accions (background)
+        ExpenseActions(
+            modifier = Modifier
+                .align(Alignment.CenterEnd)
+                .matchParentSize(),
+            onDelete = onDelete,
+            onDuplicate = onDuplicate,
+            onEdit = onEdit
+        )
+
+        // Contingut principal (foreground)
+        ExpenseContent(
+            expense = expense,
+            modifier = Modifier
+                .offset { IntOffset(offsetX.value.roundToInt(), 0) }
+                .draggable(
+                    orientation = Orientation.Horizontal,
+                    state = rememberDraggableState { delta ->
+                        val newOffset = (offsetX.value + delta)
+                            .coerceIn(-actionWidthPx, 0f)
+                        coroutineScope.launch {
+                            offsetX.snapTo(newOffset)
+                        }
+
+                    },
+                    onDragStopped = {
+                        // Snap visual (obert o tancat)
+                        if (offsetX.value < -actionWidthPx / 2) {
+                            offsetX.animateTo(-actionWidthPx)
+                        } else {
+                            offsetX.animateTo(0f)
+                        }
+                    }
+                )
+                .background(MaterialTheme.colorScheme.surface)
+        )
     }
 }
+
 
 @Composable
 fun ExpenseActions(
@@ -237,7 +265,6 @@ fun ExpenseActions(
     Row(
         modifier = modifier
             .width(180.dp)
-            .fillMaxHeight()
             .background(MaterialTheme.colorScheme.surfaceVariant),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceEvenly
@@ -254,13 +281,16 @@ fun ExpenseActions(
     }
 }
 
+
 @Composable
 fun ExpenseContent(
     expense: Expense,
     modifier: Modifier = Modifier
 ) {
     Row(
-        modifier = modifier.fillMaxWidth(),
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(vertical = 2.dp, horizontal = 12.dp),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
@@ -283,6 +313,7 @@ fun ExpenseContent(
         }
     }
 }
+
 
 
 
