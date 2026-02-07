@@ -77,6 +77,19 @@ class ExpensesListViewModel @Inject constructor(
                     if (current == event.month) null else event.month
                 }
             }
+
+            is ExpensesListEvent.DeleteExpense -> {
+                TODO()
+            }
+
+            is ExpensesListEvent.DuplicateExpense -> {
+                TODO()
+            }
+
+            is ExpensesListEvent.EditExpense -> {
+                TODO()
+            }
+
             ExpensesListEvent.AddExpensesClick ->
                 viewModelScope.launch {
                     _effects.send(ExpensesListEffect.NavigateToAddExpense)

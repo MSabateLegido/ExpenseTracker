@@ -12,11 +12,14 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import com.example.expensetracker.R
 import com.example.expensetracker.presentation.expenses.add.AddExpenseScreen
 import com.example.expensetracker.presentation.expenses.add.AddExpenseViewModel
+import com.example.expensetracker.presentation.utils.ExpenseTrackerTopbar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -28,20 +31,9 @@ fun AddCategoryRoute(
     val state by viewModel.state.collectAsStateWithLifecycle()
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = {
-                    Text("Afegir categoria")
-                },
-                navigationIcon = {
-                    IconButton(
-                        onClick = { navController.navigateUp() }
-                    ) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Tornar"
-                        )
-                    }
-                }
+            ExpenseTrackerTopbar(
+                stringResource(id = R.string.add_category_title),
+                onClick = { navController.navigateUp() }
             )
         }
     ) { innerPadding ->

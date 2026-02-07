@@ -12,55 +12,41 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 
-private val DarkColorScheme = darkColorScheme(
+private val LightColorScheme = lightColorScheme(
     primary = Purple80,
     secondary = PurpleGrey80,
     tertiary = Pink80
 )
 
-private val LightColorScheme = lightColorScheme(
-    primary = GreenPrimary,
-    onPrimary = Color.White,
-    primaryContainer = GreenPrimaryContainer,
-    onPrimaryContainer = Color(0xFF0D3D17),
+private val DarkColorScheme = darkColorScheme(
+    primary = Primary,
+    onPrimary = OnPrimary,
+    primaryContainer = PrimaryContainer,
+    onPrimaryContainer = OnPrimaryContainer,
 
-    secondary = BlueSecondary,
-    onSecondary = Color.White,
-    secondaryContainer = BlueSecondaryContainer,
-    onSecondaryContainer = Color(0xFF00363A),
+    secondary = Secondary,
+    onSecondary = OnSecondary,
+    secondaryContainer = SecondaryContainer,
+    onSecondaryContainer = OnSecondaryContainer,
 
-    tertiary = AmberTertiary,
-    onTertiary = Color.Black,
+    tertiary = Tertiary,
+    onTertiary = OnTertiary,
 
-    background = AppBackground,
-    onBackground = Color(0xFF1C1B1F),
+    background = Background,
+    onBackground = OnBackground,
 
-    surface = AppSurface,
-    onSurface = Color(0xFF1C1B1F),
+    surface = Surface,
+    onSurface = OnSurface,
 
-    surfaceVariant = Color(0xFFE1E5EA),
-    onSurfaceVariant = Color(0xFF44474E),
+    surfaceVariant = SurfaceVariant,
+    onSurfaceVariant = OnSurfaceVariant,
 
-    outline = Color(0xFFB0B7C3)
+    outline = Outline
 )
-
-/*private val LightColorScheme = lightColorScheme(
-    primary = Purple40,
-    secondary = PurpleGrey40,
-    tertiary = Pink40,
-
-    background = Color(0x0700FF14),
-    surface = Color(0x19000000),
-    onPrimary = Color.White,
-    onSecondary = Color.White,
-    onTertiary = Color.White,
-    onBackground = Color(0xFF1C1B1F),
-    onSurface = Color(0xFF1C1B1F),
-)*/
 
 @Composable
 fun ExpenseTrackerTheme(
-    darkTheme: Boolean = false,
+    darkTheme: Boolean = true,
     // Dynamic color is available on Android 12+
     dynamicColor: Boolean = false,
     content: @Composable () -> Unit

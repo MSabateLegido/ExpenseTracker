@@ -27,6 +27,9 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
@@ -57,6 +60,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
@@ -79,47 +83,23 @@ fun AddCategoryScreen(
     state: AddCategoryState,
     onEvent: (AddCategoryEvent) -> Unit
 ) {
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text("Afegir categoria") }
-            )
-        },
-        bottomBar = {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .navigationBarsPadding()
-                    .padding(16.dp)
-            ) {
-                Button(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(52.dp),
-                    enabled = state.isSaveEnabled,
-                    onClick = { onEvent(AddCategoryEvent.SaveClicked) }
-                ) {
-                    Text("Guardar")
-                }
-            }
-        }
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(16.dp)
+    ) {
 
-    ) { paddingValues ->
-
-        val scrollState = rememberScrollState()
-        
         Column(
             modifier = Modifier
-                .padding(paddingValues)
-                .padding(horizontal = 16.dp, vertical = 16.dp)
-                .verticalScroll(scrollState),
+                .weight(1f)
+                .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
 
             Card(
                 modifier = Modifier.fillMaxWidth(),
                 colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.surfaceVariant
+                    containerColor = MaterialTheme.colorScheme.surface
                 )
             ) {
                 Column(
@@ -142,23 +122,15 @@ fun AddCategoryScreen(
 
             if (state.isNewCategory) {
                 Card(
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.surface
+                    )
                 ) {
                     Column(
                         modifier = Modifier.padding(16.dp),
                         verticalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
-                        Text(
-                            text = "Nova categoria",
-                            style = MaterialTheme.typography.titleMedium
-                        )
-
-                        Text(
-                            text = "Defineix la categoria pare abans d’afegir la subcategoria",
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-
                         NewCategoryFields(
                             name = state.categoryName,
                             selectedColor = state.categoryColor,
@@ -174,23 +146,15 @@ fun AddCategoryScreen(
             }
 
             Card(
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.surface
+                )
             ) {
                 Column(
                     modifier = Modifier.padding(16.dp),
                     verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
-                    Text(
-                        text = "Subcategoria",
-                        style = MaterialTheme.typography.titleMedium
-                    )
-
-                    Text(
-                        text = "És la categoria que assignaràs a les despeses",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-
                     SubcategoryFields(
                         name = state.subcategoryName,
                         selectedColor = state.subcategoryColor,
@@ -204,8 +168,22 @@ fun AddCategoryScreen(
                 }
             }
         }
+
+        Button(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(52.dp),
+            enabled = state.isSaveEnabled,
+            onClick = { onEvent(AddCategoryEvent.SaveClicked) }
+        ) {
+            Text(
+                "Guardar categoria",
+                style = MaterialTheme.typography.titleSmall
+            )
+        }
     }
 }
+
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -247,7 +225,11 @@ fun CategorySelector(
                     )
                 },
                 trailingIcon = {
-                    ExposedDropdownMenuDefaults.TrailingIcon(expanded)
+                    Icon(
+                        imageVector = Icons.Default.ArrowDropDown,
+                        modifier = Modifier.rotate(if (expanded) 180f else 0f),
+                        contentDescription = null
+                    )
                 }
             )
 
@@ -274,29 +256,31 @@ fun CategorySelector(
                     )
                 }
 
-                HorizontalDivider(
-                    modifier = Modifier.padding(vertical = 8.dp),
-                    thickness = DividerDefaults.Thickness, color = DividerDefaults.color
-                )
+                if (!isNewCategory) {
+                    HorizontalDivider(
+                        modifier = Modifier.padding(vertical = 8.dp),
+                        thickness = DividerDefaults.Thickness, color = DividerDefaults.color
+                    )
 
-                DropdownMenuItem(
-                    text = {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(8.dp)
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Add,
-                                contentDescription = null
-                            )
-                            Text("Crear nova categoria")
+                    DropdownMenuItem(
+                        text = {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.Add,
+                                    contentDescription = null
+                                )
+                                Text("Crear nova categoria")
+                            }
+                        },
+                        onClick = {
+                            expanded = false
+                            onNewCategorySelected()
                         }
-                    },
-                    onClick = {
-                        expanded = false
-                        onNewCategorySelected()
-                    }
-                )
+                    )
+                }
             }
         }
     }
@@ -495,7 +479,6 @@ fun SaturationValuePicker(
                 }
         )
 
-        // 🎯 Cursor centrat correctament
         val cursorRadiusPx = with(density) { cursorSize.toPx() } / 2f
 
         val cursorXPx = (saturation * widthPx).coerceIn(0f, widthPx)

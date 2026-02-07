@@ -2,6 +2,7 @@ package com.example.expensetracker.presentation.expenses.add
 
 import com.example.expensetracker.domain.model.Category
 import com.example.expensetracker.domain.model.Subcategory
+import java.time.LocalDate
 
 
 data class AddExpenseState(
@@ -10,8 +11,14 @@ data class AddExpenseState(
     val selectedSubcategory: Subcategory? = null,
     val categories: List<CategoryWithChildren> = emptyList(),
     val isSaving: Boolean = false,
-    val error: String? = null
-)
+    val error: String? = null,
+    val selectedDate: LocalDate = LocalDate.now()
+) {
+    val isSaveEnabled: Boolean = name.isNotBlank()
+            && amount.isNotBlank()
+            && selectedSubcategory != null
+            && !isSaving
+}
 
 data class CategoryWithChildren (
     val category: Category,
