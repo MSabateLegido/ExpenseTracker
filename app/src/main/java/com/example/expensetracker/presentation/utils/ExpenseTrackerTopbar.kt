@@ -10,16 +10,19 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
+import com.example.expensetracker.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ExpenseTrackerTopbar(
+    title: String,
     onClick: () -> Unit
 ) {
     TopAppBar(
         title = {
             Text(
-                text = "Afegir Despesa",
+                text = title,
                 style = MaterialTheme.typography.titleMedium
             )
         },
@@ -29,7 +32,7 @@ fun ExpenseTrackerTopbar(
             ) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = "Tornar"
+                    contentDescription = stringResource(id = R.string.back_button_content_description)
                 )
             }
         },

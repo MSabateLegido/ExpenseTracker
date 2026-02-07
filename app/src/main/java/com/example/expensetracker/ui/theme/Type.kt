@@ -9,10 +9,9 @@ import androidx.compose.ui.unit.sp
 
 // Set of Material typography styles to start with
 val Typography = Typography(
-
     // Títols grans (TopBar)
     titleLarge = TextStyle(
-        fontFamily = Inter,
+        fontFamily = Space,
         fontWeight = FontWeight.Bold,
         fontSize = 30.sp,
         color = Color(0xFFE7E7E7)
@@ -20,14 +19,14 @@ val Typography = Typography(
 
     // Títols mitjans (Mesos)
     titleMedium = TextStyle(
-        fontFamily = Inter,
+        fontFamily = Space,
         fontWeight = FontWeight.Bold,
         fontSize = 24.sp,
         color = Color(0xFFE7E7E7)
     ),
 
     titleSmall = TextStyle(
-        fontFamily = Inter,
+        fontFamily = Space,
         fontWeight = FontWeight.Bold,
         fontSize = 18.sp,
         color = Color(0xFFE7E7E7)

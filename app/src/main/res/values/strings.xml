@@ -1,3 +1,26 @@
 <resources>
     <string name="app_name">ExpenseTracker</string>
+    <string name="expenses_list_title">Despeses</string>
+    <string name="add_expense_title">Afegir Despesa</string>
+    <string name="add_expense_category_card_title">Categoria</string>
+    <string name="add_expense_expense_card_title">Despesa</string>
+    <string name="add_expense_date_card_title">Data</string>
+    <string name="add_expense_expense_name_label">Nom de la despesa</string>
+    <string name="add_expense_quantity_label">Quantitat</string>
+    <string name="add_expense_save_expense_button">Guardar despesa</string>
+    <string name="add_expense_add_new_category_button">Afegir categoria</string>
+    <string name="add_category_title">Afegir Categoria</string>
+    <string name="add_category_parent_category_card_title">Categoria pare</string>
+    <string name="add_category_new_category_card_title">Nova categoria</string>
+    <string name="add_category_new_subcategory_card_title">Subcategoria</string>
+    <string name="add_category_create_new_category_button">Crear nova categoria</string>
+    <string name="add_category_new_category_name_label">Nom de la categoria</string>
+    <string name="add_category_choose_color_button">Escollir color</string>
+    <string name="add_category_color_picker_title">Selecciona un color</string>
+    <string name="add_category_subcategory_name_label">Nom de la subcategoria</string>
+    <string name="add_category_save_category_button">Guardar categoria</string>
+    <string name="back_button_content_description">Tornar</string>
+    <string name="select_date_content_description">Seleccionar data</string>
+    <string name="confirm_text">Acceptar</string>
+    <string name="cancel_text">Cancel·lar</string>
 </resources>

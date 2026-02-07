@@ -49,6 +49,9 @@ class AddExpenseViewModel @Inject constructor(
             is AddExpenseEvent.AmountChanged ->
                 formState.update { it.copy(amount = event.value) }
 
+            is AddExpenseEvent.DateChanged ->
+                formState.update { it.copy(selectedDate = event.value) }
+
             is AddExpenseEvent.SubcategorySelected ->
                 formState.update { it.copy(selectedSubcategory = event.subcategory) }
 
@@ -56,7 +59,7 @@ class AddExpenseViewModel @Inject constructor(
                 formState.update {
                     it.copy(
                         name = "Dummy ${(0..500).random()}",
-                        amount = 1000.01f.toString(),//Random.nextFloat().toString(),
+                        amount = 1.03f.toString(),
                         selectedSubcategory = event.categories.random().subcategories.random()
                     )
                 }
@@ -83,6 +86,7 @@ class AddExpenseViewModel @Inject constructor(
 
         val amount = state.amount.toDoubleOrNull() ?: return
         val subcategory = state.selectedSubcategory ?: return
+        val date = state.selectedDate
 
         viewModelScope.launch {
             formState.update { it.copy(isSaving = true) }
@@ -93,7 +97,7 @@ class AddExpenseViewModel @Inject constructor(
                     title = state.name,
                     amount = amount,
                     category = subcategory,
-                    date = LocalDate.now()
+                    date = date
                 )
             )
 

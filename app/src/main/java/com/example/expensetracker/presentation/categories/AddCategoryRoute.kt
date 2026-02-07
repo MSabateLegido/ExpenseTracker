@@ -12,9 +12,11 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import com.example.expensetracker.R
 import com.example.expensetracker.presentation.expenses.add.AddExpenseScreen
 import com.example.expensetracker.presentation.expenses.add.AddExpenseViewModel
 import com.example.expensetracker.presentation.utils.ExpenseTrackerTopbar
@@ -30,6 +32,7 @@ fun AddCategoryRoute(
     Scaffold(
         topBar = {
             ExpenseTrackerTopbar(
+                stringResource(id = R.string.add_category_title),
                 onClick = { navController.navigateUp() }
             )
         }
