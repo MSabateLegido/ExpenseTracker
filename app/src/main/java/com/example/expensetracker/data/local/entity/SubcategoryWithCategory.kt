@@ -3,7 +3,7 @@ package com.example.expensetracker.data.local.entity
 import androidx.compose.ui.graphics.Color
 import androidx.room.Embedded
 import androidx.room.Relation
-import com.example.expensetracker.domain.model.Subcategory
+import com.example.expensetracker.domain.model.category.Subcategory
 
 data class SubcategoryWithCategory(
     @Embedded val subcategory: SubcategoryEntity,

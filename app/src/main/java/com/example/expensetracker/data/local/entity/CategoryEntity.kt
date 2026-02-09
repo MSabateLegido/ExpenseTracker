@@ -4,7 +4,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
-import com.example.expensetracker.domain.model.Category
+import com.example.expensetracker.domain.model.category.Category
 
 @Entity(
     tableName = "categories",

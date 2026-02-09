@@ -1,7 +1,7 @@
 package com.example.expensetracker.domain.usecase.category
 
 import com.example.expensetracker.data.repository.CategoryRepository
-import com.example.expensetracker.domain.model.CreateCategoryWithSubcategory
+import com.example.expensetracker.domain.model.category.CreateCategoryWithSubcategory
 import javax.inject.Inject
 
 class CreateCategoryWithSubcategoryUseCase @Inject constructor(

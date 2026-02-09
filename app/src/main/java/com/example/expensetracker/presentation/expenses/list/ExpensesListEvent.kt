@@ -1,5 +1,6 @@
 package com.example.expensetracker.presentation.expenses.list
 
+import java.time.LocalDate
 import java.time.YearMonth
 
 
@@ -10,5 +11,5 @@ sealed interface ExpensesListEvent {
     data class EditExpense(val expenseId: Long) : ExpensesListEvent
     data class DuplicateExpense(val expenseId: Long) : ExpensesListEvent
 
-    data class ToggleMonth(val month: YearMonth) : ExpensesListEvent
+    data class ToggleMonth(val month: LocalDate) : ExpensesListEvent
 }

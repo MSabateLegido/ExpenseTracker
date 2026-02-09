@@ -55,9 +55,8 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.DialogProperties
 import com.example.expensetracker.R
-import com.example.expensetracker.domain.model.Subcategory
+import com.example.expensetracker.domain.model.category.Subcategory
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId

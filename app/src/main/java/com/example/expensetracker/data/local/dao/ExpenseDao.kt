@@ -7,6 +7,7 @@ import androidx.room.Query
 import androidx.room.Update
 import com.example.expensetracker.data.local.entity.ExpenseEntity
 import com.example.expensetracker.data.local.entity.ExpenseWithSubcategory
+import com.example.expensetracker.domain.model.month.MonthData
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -44,4 +45,15 @@ interface ExpenseDao {
         WHERE subcategoryId = :fromSubcategoryId
     """)
     fun moveExpenses(fromSubcategoryId: Long, toSubcategoryId: Long)
+
+    @Query("""
+        SELECT
+            (strftime('%Y', date(date * 86400, 'unixepoch')) * 100 +
+             strftime('%m', date(date * 86400, 'unixepoch'))) AS month,
+            SUM(amount) AS total
+        FROM expenses
+        GROUP BY month
+        ORDER BY month DESC
+    """)
+    fun getAllMonthData(): Flow<List<MonthData>>
 }

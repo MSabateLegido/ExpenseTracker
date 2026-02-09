@@ -1,7 +1,7 @@
 package com.example.expensetracker.presentation.expenses.add
 
-import com.example.expensetracker.domain.model.Category
-import com.example.expensetracker.domain.model.Subcategory
+import com.example.expensetracker.domain.model.category.Category
+import com.example.expensetracker.domain.model.category.Subcategory
 import java.time.LocalDate
 
 

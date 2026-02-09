@@ -1,7 +1,7 @@
 package com.example.expensetracker.presentation.categories
 
 import androidx.compose.ui.graphics.Color
-import com.example.expensetracker.domain.model.Category
+import com.example.expensetracker.domain.model.category.Category
 
 data class AddCategoryState (
     val subcategoryName: String = "",

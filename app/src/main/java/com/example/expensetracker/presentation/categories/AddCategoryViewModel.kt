@@ -3,12 +3,11 @@ package com.example.expensetracker.presentation.categories
 import androidx.compose.ui.graphics.toArgb
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.expensetracker.domain.model.CreateCategoryWithSubcategory
-import com.example.expensetracker.domain.model.Subcategory
+import com.example.expensetracker.domain.model.category.CreateCategoryWithSubcategory
+import com.example.expensetracker.domain.model.category.Subcategory
 import com.example.expensetracker.domain.usecase.category.AddSubcategoryUseCase
 import com.example.expensetracker.domain.usecase.category.CreateCategoryWithSubcategoryUseCase
 import com.example.expensetracker.domain.usecase.category.GetCategoriesUseCase
-import com.example.expensetracker.presentation.expenses.add.AddExpenseEffect
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
