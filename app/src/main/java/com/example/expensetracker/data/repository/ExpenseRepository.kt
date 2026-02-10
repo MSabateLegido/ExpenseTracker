@@ -5,6 +5,7 @@ import com.example.expensetracker.data.local.entity.toUi
 import com.example.expensetracker.domain.model.expense.Expense
 import com.example.expensetracker.domain.model.category.toEntity
 import com.example.expensetracker.domain.model.expense.toEntity
+import com.example.expensetracker.domain.model.month.Month
 import com.example.expensetracker.domain.model.month.MonthData
 import com.example.expensetracker.domain.model.month.toUi
 import kotlinx.coroutines.flow.Flow
@@ -24,7 +25,7 @@ class ExpenseRepository @Inject constructor(
             .getAllExpenses()
             .map { list -> list.map { it.toUi() } }
 
-    fun getAllMonthData(): Flow<List<MonthData>> =
+    fun getAllMonthData(): Flow<List<Month>> =
         expenseDao
             .getAllMonthData()
             .map { list -> list.map { it.toUi() } }

@@ -4,12 +4,13 @@ import java.time.LocalDate
 import java.time.YearMonth
 
 data class MonthData(
-    val month: LocalDate,
+    val year: Int,
+    val month: Int,
     val total: Double,
 )
 
-fun MonthData.toUi(): MonthData =
-    MonthData(
-        month = month,
+fun MonthData.toUi(): Month =
+    Month(
+        month = YearMonth.of(year, month),
         total = total
     )

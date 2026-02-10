@@ -48,12 +48,13 @@ interface ExpenseDao {
 
     @Query("""
         SELECT
-            (strftime('%Y', date(date * 86400, 'unixepoch')) * 100 +
-             strftime('%m', date(date * 86400, 'unixepoch'))) AS month,
+            strftime('%Y', date(date * 86400, 'unixepoch')) AS year,
+            strftime('%m', date(date * 86400, 'unixepoch')) AS month,
             SUM(amount) AS total
         FROM expenses
-        GROUP BY month
-        ORDER BY month DESC
+        GROUP BY year, month
+        ORDER BY year DESC, month DESC
+
     """)
     fun getAllMonthData(): Flow<List<MonthData>>
 }

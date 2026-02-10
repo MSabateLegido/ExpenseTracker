@@ -29,7 +29,7 @@ class ExpensesListViewModel @Inject constructor(
 
     private val _effects = Channel<ExpensesListEffect>()
     val effects = _effects.receiveAsFlow()
-    private val expandedMonth = MutableStateFlow<LocalDate?>(LocalDate.now())
+    private val expandedMonth = MutableStateFlow<YearMonth?>(YearMonth.now())
     val state: StateFlow<ExpensesListState> =
         combine(
             getAllExpensesUseCase.invoke(),
