@@ -1,4 +1,4 @@
-package com.example.expensetracker.presentation.expenses.list
+package com.example.expensetracker.presentation.month
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -8,13 +8,13 @@ import kotlinx.coroutines.flow.Flow
 
 @Composable
 fun ExpensesListEffectHandler(
-    effects: Flow<ExpensesListEffect>,
+    effects: Flow<MonthListEffect>,
     navController: NavController
 ) {
     LaunchedEffect(Unit) {
         effects.collect { effect ->
             when (effect) {
-                ExpensesListEffect.NavigateToAddExpense -> {
+                MonthListEffect.NavigateToAddExpense -> {
                     navController.navigate(Routes.ADD_EXPENSE)
                 }
             }

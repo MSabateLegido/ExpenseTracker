@@ -1,4 +1,4 @@
-package com.example.expensetracker.presentation.expenses.list
+package com.example.expensetracker.presentation.month
 
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme

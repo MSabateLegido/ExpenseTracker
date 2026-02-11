@@ -1,4 +1,4 @@
-package com.example.expensetracker.presentation.expenses.list
+package com.example.expensetracker.presentation.month
 
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
@@ -22,7 +22,7 @@ import androidx.navigation.NavController
 @Composable
 fun ExpensesListRoute(
     modifier: Modifier = Modifier,
-    viewModel: ExpensesListViewModel = hiltViewModel(),
+    viewModel: MonthListViewModel = hiltViewModel(),
     navController: NavController
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -30,7 +30,7 @@ fun ExpensesListRoute(
         topBar = { ExpensesListTopBar(stringResource(id = R.string.expenses_list_title)) },
         floatingActionButton = {
             FloatingActionButton(
-                onClick = { viewModel.onEvent(ExpensesListEvent.AddExpensesClick) }
+                onClick = { viewModel.onEvent(MonthListEvent.AddExpensesClick) }
             ) {
                 Icon(Icons.Default.Add, contentDescription = "Add expense")
             }
