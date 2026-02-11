@@ -4,13 +4,15 @@ import java.time.LocalDate
 import java.time.YearMonth
 
 data class MonthData(
-    val year: Int,
-    val month: Int,
-    val total: Double,
+    val yearMonth: Int,
+    val total: Double
 )
 
 fun MonthData.toUi(): Month =
     Month(
-        month = YearMonth.of(year, month),
+        month = yearMonth.toYearMonth(),
         total = total
     )
+
+fun Int.toYearMonth(): YearMonth =
+    YearMonth.of(this / 100, this % 100)

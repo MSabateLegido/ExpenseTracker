@@ -1,10 +1,7 @@
 package com.example.expensetracker.presentation.expenses.list
 
-import android.util.Log
-import androidx.compose.ui.platform.LocalGraphicsContext
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.expensetracker.domain.model.expense.Expense
 import com.example.expensetracker.domain.usecase.expense.GetAllExpensesUseCase
 import com.example.expensetracker.domain.usecase.month.GetMonthDataUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -17,7 +14,6 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.time.LocalDate
 import java.time.YearMonth
 import javax.inject.Inject
 
@@ -29,16 +25,13 @@ class ExpensesListViewModel @Inject constructor(
 
     private val _effects = Channel<ExpensesListEffect>()
     val effects = _effects.receiveAsFlow()
-    private val expandedMonth = MutableStateFlow<YearMonth?>(YearMonth.now())
     val state: StateFlow<ExpensesListState> =
         combine(
             getAllExpensesUseCase.invoke(),
-            getMonthDataUseCase.invoke(),
-            expandedMonth
-        ) { expenses, monthData, expandedMonth  ->
+            getMonthDataUseCase.invoke()
+        ) { expenses, monthData  ->
             ExpensesListState(
-                months = monthData,
-                expandedMonth = expandedMonth
+                months = monthData
             )
         }
             .stateIn(
@@ -47,28 +40,22 @@ class ExpensesListViewModel @Inject constructor(
                 initialValue = ExpensesListState()
             )
 
-
-    fun calculateTotal(expenses: List<Expense>): Double =
-        expenses.sumOf { it.amount }
-
     fun onEvent(event: ExpensesListEvent) {
         when (event) {
-            is ExpensesListEvent.ToggleMonth -> {
-                expandedMonth.update { current ->
-                    if (current == event.month) null else event.month
-                }
+            is ExpensesListEvent.OnClickMonth -> {
+
             }
 
             is ExpensesListEvent.DeleteExpense -> {
-                TODO()
+
             }
 
             is ExpensesListEvent.DuplicateExpense -> {
-                TODO()
+
             }
 
             is ExpensesListEvent.EditExpense -> {
-                TODO()
+
             }
 
             ExpensesListEvent.AddExpensesClick ->

@@ -7,7 +7,6 @@ import java.time.LocalDate
 import java.time.YearMonth
 
 data class ExpensesListState(
-    val months: List<Month> = emptyList(),
-    val expandedMonth: YearMonth? = null
+    val months: List<Month> = emptyList()
 )
 

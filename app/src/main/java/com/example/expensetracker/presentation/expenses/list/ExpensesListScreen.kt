@@ -8,21 +8,16 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.overscroll
 import androidx.compose.foundation.rememberOverscrollEffect
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Refresh
@@ -36,18 +31,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Velocity
 import androidx.compose.ui.unit.dp
 import com.example.expensetracker.domain.model.expense.Expense
-import com.example.expensetracker.domain.model.month.MonthData
-import com.example.expensetracker.utils.toMonthYearText
+import com.example.expensetracker.domain.model.month.Month
+import com.example.expensetracker.utils.formatMonthYear
 import java.time.YearMonth
 import java.time.format.DateTimeFormatter
 import java.util.Locale
@@ -70,10 +63,7 @@ fun ExpensesListScreen(
         ) { month ->
             MonthItem(
                 month = month,
-                expanded = state.expandedMonth == month.month,
-                onHeaderClick = {
-                    onEvent(ExpensesListEvent.ToggleMonth(month.month))
-                }
+                onClickMonth = { onEvent(ExpensesListEvent.OnClickMonth(month.month)) }
             )
         }
     }
@@ -81,15 +71,12 @@ fun ExpensesListScreen(
 
 @Composable
 fun MonthItem(
-    month: MonthData,
-    expanded: Boolean,
-    onHeaderClick: () -> Unit
+    month: Month,
+    onClickMonth: () -> Unit
 ) {
 
-    val blockParentScroll = rememberBlockParentScrollConnection()
-    val overscrollEffect = rememberOverscrollEffect()
-
     Card(
+        onClick = onClickMonth,
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp),
@@ -106,165 +93,42 @@ fun MonthItem(
         ) {
 
             MonthHeader(
-                month = month,
-                expanded = expanded,
-                onClick = onHeaderClick
+                month = month
             )
-
-            /*if (expanded) {
-                Spacer(modifier = Modifier.height(12.dp))
-
-                LazyColumn(
-                    userScrollEnabled = true,
-                    modifier = Modifier
-                        .nestedScroll(blockParentScroll)
-                        .overscroll(overscrollEffect)
-                        .fillMaxSize()
-                        .heightIn(max = 350.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    items(
-                        items = month.expenses,
-                        key = { it.id }
-                    ) { expense ->
-                        ExpenseItem(
-                            expense = expense
-                        )
-                    }
-                }
-            }*/
         }
     }
 }
 
 @Composable
 fun MonthHeader(
-    month: MonthData,
-    expanded: Boolean,
-    onClick: () -> Unit
+    month: Month
 ) {
 
     Row(
         modifier = Modifier
             .padding(8.dp)
-            .fillMaxWidth()
-            .clickable(onClick = onClick),
+            .fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
 
-        Column {
-            Text(
-                modifier = Modifier.padding(bottom = 8.dp),
-                text = month.month.toMonthYearText(),
-                style = MaterialTheme.typography.titleMedium,
-                textAlign = TextAlign.Start
-            )
-
-            Text(
-                text = formatAmount(month.total),
-                style = MaterialTheme.typography.titleSmall,
-                color = MaterialTheme.colorScheme.primary,
-                textAlign = TextAlign.End
-            )
-        }
-
-
-        Icon(
-            imageVector = Icons.Default.ArrowDropDown,
-            modifier = Modifier.rotate(if (expanded) 180f else 0f),
-            contentDescription = null
+        Text(
+            modifier = Modifier.padding(bottom = 8.dp),
+            text = month.month.formatMonthYear(),
+            style = MaterialTheme.typography.titleMedium,
+            textAlign = TextAlign.Start
         )
+
+        Text(
+            text = formatAmount(month.total),
+            style = MaterialTheme.typography.titleSmall,
+            color = MaterialTheme.colorScheme.primary,
+            textAlign = TextAlign.End
+        )
+
     }
 }
 
-
-@Composable
-fun ExpenseItem(
-    expense: Expense,
-    modifier: Modifier = Modifier
-) {
-    Row(
-        modifier = modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween
-    ) {
-        Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-            Text(expense.title, style = MaterialTheme.typography.bodyLarge)
-            CategoryPill(
-                name = expense.category.name,
-                color = expense.category.color
-            )
-        }
-
-        Column(horizontalAlignment = Alignment.End) {
-            Text(
-                text = formatAmount(expense.amount),
-                style = MaterialTheme.typography.bodyLarge
-            )
-            Text(
-                text = expense.date.format(DateTimeFormatter.ofPattern("dd/MM")),
-                style = MaterialTheme.typography.labelSmall
-            )
-        }
-    }
-}
-
-@Composable
-fun ExpenseActions(
-    modifier: Modifier = Modifier,
-    onDelete: () -> Unit,
-    onDuplicate: () -> Unit,
-    onEdit: () -> Unit
-) {
-    Row(
-        modifier = modifier
-            .width(180.dp)
-            .fillMaxHeight()
-            .background(MaterialTheme.colorScheme.surfaceVariant),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceEvenly
-    ) {
-        IconButton(onClick = onDelete) {
-            Icon(Icons.Default.Delete, contentDescription = "Delete")
-        }
-        IconButton(onClick = onDuplicate) {
-            Icon(Icons.Default.Refresh, contentDescription = "Duplicate")
-        }
-        IconButton(onClick = onEdit) {
-            Icon(Icons.Default.Edit, contentDescription = "Edit")
-        }
-    }
-}
-
-@Composable
-fun ExpenseContent(
-    expense: Expense,
-    modifier: Modifier = Modifier
-) {
-    Row(
-        modifier = modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween
-    ) {
-        Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-            Text(expense.title, style = MaterialTheme.typography.bodyLarge)
-            CategoryPill(
-                name = expense.category.name,
-                color = expense.category.color
-            )
-        }
-
-        Column(horizontalAlignment = Alignment.End) {
-            Text(
-                text = formatAmount(expense.amount),
-                style = MaterialTheme.typography.bodyLarge
-            )
-            Text(
-                text = expense.date.format(DateTimeFormatter.ofPattern("dd/MM")),
-                style = MaterialTheme.typography.labelSmall
-            )
-        }
-    }
-}
 
 
 
@@ -305,38 +169,6 @@ fun Color.contrastTextColor(): Color {
                 (0.114 * blue)
 
     return if (luminance > 0.5f) Color.Black else Color.White
-}
-
-@Composable
-fun rememberBlockParentScrollConnection(): NestedScrollConnection {
-    return remember {
-        object : NestedScrollConnection {
-
-            override fun onPostScroll(
-                consumed: Offset,
-                available: Offset,
-                source: NestedScrollSource
-            ): Offset {
-                return available
-            }
-
-            override suspend fun onPostFling(
-                consumed: Velocity,
-                available: Velocity
-            ): Velocity {
-                return available
-            }
-        }
-    }
-}
-
-
-
-fun YearMonth.formatMonthYear(): String {
-    val formatter = DateTimeFormatter.ofPattern("MMMM yyyy", Locale.getDefault())
-    return this.atDay(1)
-        .format(formatter)
-        .replaceFirstChar { it.uppercase() }
 }
 
 
