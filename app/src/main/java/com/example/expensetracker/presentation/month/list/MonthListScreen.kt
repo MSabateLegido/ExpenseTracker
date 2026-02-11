@@ -1,4 +1,4 @@
-package com.example.expensetracker.presentation.month
+package com.example.expensetracker.presentation.month.list
 
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
@@ -30,7 +30,7 @@ import java.util.Locale
 
 
 @Composable
-fun ExpensesListScreen(
+fun MonthListScreen(
     modifier: Modifier = Modifier,
     state: MonthListState,
     onEvent: (MonthListEvent) -> Unit

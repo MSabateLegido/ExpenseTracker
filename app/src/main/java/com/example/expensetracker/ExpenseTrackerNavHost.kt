@@ -1,13 +1,18 @@
 package com.example.expensetracker
 
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
 import com.example.expensetracker.presentation.categories.AddCategoryRoute
 import com.example.expensetracker.presentation.expenses.add.AddExpenseRoute
-import com.example.expensetracker.presentation.month.ExpensesListRoute
+import com.example.expensetracker.presentation.month.detail.MonthDetailRoute
+import com.example.expensetracker.presentation.month.list.MonthListRoute
 import com.example.expensetracker.utils.Routes
+import java.time.YearMonth
 
 @Composable
 fun ExpenseTrackerNavHost(
@@ -20,8 +25,24 @@ fun ExpenseTrackerNavHost(
     ) {
 
         composable(Routes.DASHBOARD) {
-            ExpensesListRoute(
+            MonthListRoute(
                 navController = navController
+            )
+        }
+
+        composable(
+            route = "${Routes.MONTH_DETAIL}/{yearMonth}",
+            arguments = listOf(
+                navArgument("yearMonth") {
+                    type = NavType.StringType
+                }
+            )
+        ) { backStackEntry ->
+            val yearMonthString = backStackEntry.arguments?.getString("yearMonth")
+            val yearMonth = YearMonth.parse(yearMonthString!!)
+            MonthDetailRoute(
+                navController = navController,
+                yearMonth = yearMonth
             )
         }
 

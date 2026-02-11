@@ -29,6 +29,13 @@ interface ExpenseDao {
 
     @Query("""
         SELECT * FROM expenses
+        WHERE date BETWEEN :startOfMonth AND :endOfMonth
+        ORDER BY date DESC
+    """)
+    fun getMonthExpenses(startOfMonth: Long, endOfMonth: Long): Flow<List<ExpenseWithSubcategory>>
+
+    @Query("""
+        SELECT * FROM expenses
         WHERE id = :id
     """)
     fun getById(id: Long): ExpenseEntity?

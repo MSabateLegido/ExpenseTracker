@@ -1,4 +1,4 @@
-package com.example.expensetracker.presentation.month
+package com.example.expensetracker.presentation.month.list
 
 import com.example.expensetracker.domain.model.month.Month
 
