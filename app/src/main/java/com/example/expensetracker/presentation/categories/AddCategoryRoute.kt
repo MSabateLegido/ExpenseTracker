@@ -1,14 +1,8 @@
 package com.example.expensetracker.presentation.categories
 
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -17,8 +11,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.example.expensetracker.R
-import com.example.expensetracker.presentation.expenses.add.AddExpenseScreen
-import com.example.expensetracker.presentation.expenses.add.AddExpenseViewModel
 import com.example.expensetracker.presentation.utils.ExpenseTrackerTopbar
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -33,7 +25,7 @@ fun AddCategoryRoute(
         topBar = {
             ExpenseTrackerTopbar(
                 stringResource(id = R.string.add_category_title),
-                onClick = { navController.navigateUp() }
+                onBack = { navController.navigateUp() }
             )
         }
     ) { innerPadding ->

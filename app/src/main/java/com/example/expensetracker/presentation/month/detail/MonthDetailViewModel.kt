@@ -26,7 +26,8 @@ class MonthDetailViewModel @Inject constructor(
             .map { expenses ->
                 Log.d("MONTH_DETAIL", expenses.toString())
                 MonthDetailState(
-                    expenses = expenses
+                    expenses = expenses,
+                    yearMonth = yearMonth
                 )
             }.stateIn(
                 scope = viewModelScope,

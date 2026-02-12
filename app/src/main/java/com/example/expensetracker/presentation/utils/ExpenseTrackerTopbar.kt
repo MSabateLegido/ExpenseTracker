@@ -17,7 +17,7 @@ import com.example.expensetracker.R
 @Composable
 fun ExpenseTrackerTopbar(
     title: String,
-    onClick: () -> Unit
+    onBack: () -> Unit
 ) {
     TopAppBar(
         title = {
@@ -28,7 +28,7 @@ fun ExpenseTrackerTopbar(
         },
         navigationIcon = {
             IconButton(
-                onClick = onClick
+                onClick = onBack
             ) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.ArrowBack,

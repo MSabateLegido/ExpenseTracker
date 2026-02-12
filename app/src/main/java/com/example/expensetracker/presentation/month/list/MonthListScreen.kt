@@ -25,6 +25,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.expensetracker.domain.model.month.Month
+import com.example.expensetracker.utils.formatAmount
 import com.example.expensetracker.utils.formatMonthYear
 import java.util.Locale
 
@@ -36,8 +37,8 @@ fun MonthListScreen(
     onEvent: (MonthListEvent) -> Unit
 ) {
     LazyColumn(
-        modifier = modifier.fillMaxSize().padding(bottom = 16.dp),
-        contentPadding = PaddingValues(vertical = 16.dp),
+        modifier = modifier.fillMaxSize(),
+        contentPadding = PaddingValues(bottom = 64.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         items(
@@ -115,44 +116,6 @@ fun MonthHeader(
 
 
 
-@Composable
-fun CategoryPill(
-    name: String,
-    color: Color
-) {
-    val textColor = remember(color) {
-        color.contrastTextColor()
-    }
-
-    Box(
-        modifier = Modifier
-            .background(
-                color = color,
-                shape = RoundedCornerShape(50)
-            )
-            .padding(horizontal = 10.dp, vertical = 4.dp)
-    ) {
-        Text(
-            text = name,
-            style = MaterialTheme.typography.labelSmall,
-            color = textColor
-        )
-    }
-}
-
-
-fun formatAmount(amount: Double): String {
-    return String.format(Locale.getDefault(), "%.2f €", amount)
-}
-
-fun Color.contrastTextColor(): Color {
-    val luminance =
-        (0.299 * red) +
-                (0.587 * green) +
-                (0.114 * blue)
-
-    return if (luminance > 0.5f) Color.Black else Color.White
-}
 
 
 
