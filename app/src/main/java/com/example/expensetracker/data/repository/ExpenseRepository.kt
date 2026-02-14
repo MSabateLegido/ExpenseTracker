@@ -4,7 +4,6 @@ import com.example.expensetracker.data.local.dao.ExpenseDao
 import com.example.expensetracker.data.local.entity.toUi
 import com.example.expensetracker.domain.model.expense.Expense
 import com.example.expensetracker.domain.model.expense.toEntity
-import com.example.expensetracker.domain.model.month.MonthSubcategoryTotals
 import com.example.expensetracker.domain.model.month.MonthTotal
 import com.example.expensetracker.domain.model.month.MonthSubcategoryTotalsData
 import com.example.expensetracker.domain.model.month.toUi
@@ -36,9 +35,8 @@ class ExpenseRepository @Inject constructor(
             .getAllMonthData()
             .map { list -> list.map { it.toUi() } }
 
-    fun getMonthSubcategoryTotals(): Flow<List<MonthSubcategoryTotals>> =
+    fun getMonthSubcategoryTotals(): Flow<List<MonthSubcategoryTotalsData>> =
         expenseDao
             .getMonthSubcategoryTotals()
-            .map { list -> list.map { it.toUi() } }
 
 }

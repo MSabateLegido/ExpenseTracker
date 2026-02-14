@@ -455,7 +455,7 @@ fun limitTwoDecimals(input: String, changeTextEvent: () -> Unit) {
     val regex = Regex("^\\d*\\.?\\d{0,2}$")
 
     if (filtered.isEmpty() || regex.matches(filtered)) {
-        changeTextEvent
+        changeTextEvent()
     }
 }
 

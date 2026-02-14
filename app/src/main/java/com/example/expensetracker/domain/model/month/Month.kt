@@ -2,8 +2,8 @@ package com.example.expensetracker.domain.model.month
 
 import java.time.YearMonth
 
-data class MonthData(
+data class Month(
     val yearMonth: YearMonth,
     val total: Double,
-    val subcategoryTotals: List<MonthSubcategoryTotalsData>
+    val subcategoryTotals: List<SubcategoryTotals>
 )

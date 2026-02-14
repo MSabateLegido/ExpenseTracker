@@ -1,8 +1,12 @@
 package com.example.expensetracker.presentation.month.list
 
 import android.util.Log
+import androidx.compose.runtime.key
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.expensetracker.domain.model.category.Subcategory
+import com.example.expensetracker.domain.model.month.Month
+import com.example.expensetracker.domain.model.month.SubcategoryTotals
 import com.example.expensetracker.domain.usecase.category.GetSubcategoriesGroupedByCategoryUseCase
 import com.example.expensetracker.domain.usecase.month.GetMonthDataUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -29,33 +33,41 @@ class MonthListViewModel @Inject constructor(
             getMonthDataUseCase.invoke(),
             getSubcategoriesUseCase.invoke()
         ) { monthData, categories ->
-            monthData.forEach { monthData ->
-                Log.d("MonthListViewModel", "Month: ${monthData.yearMonth}")
-                monthData.subcategoryTotals.forEach { subcategoryTotal ->
-                    Log.d("MonthListViewModel", "Category: ${subcategoryTotal.subcategory} Total: ${subcategoryTotal.total}")
+            val subcategoryMap: Map<Long, Subcategory> =
+                categories
+                    .flatMap { it.subcategories }
+                    .associateBy { it.id }
+            val months: List<Month> = monthData.map { month ->
+                val mappedSubcategories = month.subcategoryTotals.mapNotNull { subTotal ->
+                    val subcategory = subcategoryMap[subTotal.subcategoryId]
+                    subcategory?.let {
+                        SubcategoryTotals(
+                            subcategory = it,
+                            total = subTotal.total
+                        )
+                    }
+                }
+
+
+                Month(
+                    yearMonth = month.yearMonth,
+                    total = month.total,
+                    subcategoryTotals = mappedSubcategories
+                )
+            }
+            months.forEach { month ->
+                month.subcategoryTotals.forEach { subcategoryTotals ->
+                    Log.d("MONTHLIST", "Month: ${month.yearMonth}, Subcategory: ${subcategoryTotals.subcategory}, Total: ${subcategoryTotals.total}")
                 }
             }
             MonthListState(
-                monthTotals = monthData,
-                categories = categories
+                monthTotals = months
             )
         }.stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5_000),
             initialValue = MonthListState()
         )
-        /*getMonthDataUseCase.invoke()
-            .map { monthData ->
-                MonthListState(
-                    months = monthData
-                )
-            }
-            .stateIn(
-                scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(5_000),
-                initialValue = MonthListState()
-            )*/
-
 
     fun onEvent(event: MonthListEvent) {
         when (event) {
