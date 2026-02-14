@@ -2,10 +2,9 @@ package com.example.expensetracker.presentation.expenses.add
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.expensetracker.domain.model.Expense
+import com.example.expensetracker.domain.model.expense.Expense
 import com.example.expensetracker.domain.usecase.category.GetSubcategoriesGroupedByCategoryUseCase
 import com.example.expensetracker.domain.usecase.expense.AddExpenseUseCase
-import com.example.expensetracker.presentation.expenses.list.ExpensesListEffect
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,9 +15,8 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.time.LocalDate
+import java.math.RoundingMode
 import javax.inject.Inject
-import kotlin.random.Random
 
 @HiltViewModel
 class AddExpenseViewModel @Inject constructor(
@@ -91,11 +89,16 @@ class AddExpenseViewModel @Inject constructor(
         viewModelScope.launch {
             formState.update { it.copy(isSaving = true) }
 
+            val normalizedAmount = amount
+                .toBigDecimal()
+                .setScale(2, RoundingMode.HALF_UP)
+                .toDouble()
+
             addExpenseUseCase(
                 Expense(
                     id = 0,
                     title = state.name,
-                    amount = amount,
+                    amount = normalizedAmount,
                     category = subcategory,
                     date = date
                 )

@@ -1,6 +1,7 @@
-package com.example.expensetracker.domain.model
+package com.example.expensetracker.domain.model.expense
 
 import com.example.expensetracker.data.local.entity.ExpenseEntity
+import com.example.expensetracker.domain.model.category.Subcategory
 import java.time.LocalDate
 
 data class Expense(

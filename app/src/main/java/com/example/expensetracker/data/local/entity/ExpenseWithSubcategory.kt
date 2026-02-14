@@ -2,7 +2,7 @@ package com.example.expensetracker.data.local.entity
 
 import androidx.room.Embedded
 import androidx.room.Relation
-import com.example.expensetracker.domain.model.Expense
+import com.example.expensetracker.domain.model.expense.Expense
 
 data class ExpenseWithSubcategory(
     @Embedded val expense: ExpenseEntity,

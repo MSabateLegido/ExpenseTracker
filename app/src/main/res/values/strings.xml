@@ -21,6 +21,7 @@
     <string name="add_category_save_category_button">Guardar categoria</string>
     <string name="back_button_content_description">Tornar</string>
     <string name="select_date_content_description">Seleccionar data</string>
+    <string name="month_detail_title">Estadístiques del mes</string>
     <string name="confirm_text">Acceptar</string>
     <string name="cancel_text">Cancel·lar</string>
 </resources>

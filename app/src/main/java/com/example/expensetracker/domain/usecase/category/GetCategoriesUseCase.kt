@@ -1,7 +1,7 @@
 package com.example.expensetracker.domain.usecase.category
 
 import com.example.expensetracker.data.repository.CategoryRepository
-import com.example.expensetracker.domain.model.Category
+import com.example.expensetracker.domain.model.category.Category
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 

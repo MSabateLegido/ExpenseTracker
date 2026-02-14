@@ -1,4 +1,4 @@
-package com.example.expensetracker.domain.model
+package com.example.expensetracker.domain.model.category
 
 data class CreateCategoryWithSubcategory(
     val categoryName: String,

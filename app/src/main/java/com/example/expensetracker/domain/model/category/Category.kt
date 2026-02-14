@@ -1,4 +1,4 @@
-package com.example.expensetracker.domain.model
+package com.example.expensetracker.domain.model.category
 
 
 import androidx.compose.ui.graphics.Color

@@ -2,7 +2,7 @@ package com.example.expensetracker.presentation.categories
 
 
 import androidx.compose.ui.graphics.Color
-import com.example.expensetracker.domain.model.Category
+import com.example.expensetracker.domain.model.category.Category
 
 sealed interface AddCategoryEvent {
     data class ExistingCategorySelected(val category: Category) : AddCategoryEvent
