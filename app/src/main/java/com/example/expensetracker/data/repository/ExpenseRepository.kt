@@ -3,10 +3,10 @@ package com.example.expensetracker.data.repository
 import com.example.expensetracker.data.local.dao.ExpenseDao
 import com.example.expensetracker.data.local.entity.toUi
 import com.example.expensetracker.domain.model.expense.Expense
-import com.example.expensetracker.domain.model.category.toEntity
 import com.example.expensetracker.domain.model.expense.toEntity
-import com.example.expensetracker.domain.model.month.Month
-import com.example.expensetracker.domain.model.month.MonthData
+import com.example.expensetracker.domain.model.month.MonthSubcategoryTotals
+import com.example.expensetracker.domain.model.month.MonthTotal
+import com.example.expensetracker.domain.model.month.MonthSubcategoryTotalsData
 import com.example.expensetracker.domain.model.month.toUi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -31,9 +31,14 @@ class ExpenseRepository @Inject constructor(
             .map { list -> list.map { it.toUi() } }
 
 
-    fun getAllMonthData(): Flow<List<Month>> =
+    fun getAllMonthData(): Flow<List<MonthTotal>> =
         expenseDao
             .getAllMonthData()
+            .map { list -> list.map { it.toUi() } }
+
+    fun getMonthSubcategoryTotals(): Flow<List<MonthSubcategoryTotals>> =
+        expenseDao
+            .getMonthSubcategoryTotals()
             .map { list -> list.map { it.toUi() } }
 
 }

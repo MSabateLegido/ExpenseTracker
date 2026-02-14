@@ -1,15 +1,16 @@
 package com.example.expensetracker.presentation.month.list
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.expensetracker.domain.usecase.expense.GetAllExpensesUseCase
+import com.example.expensetracker.domain.usecase.category.GetSubcategoriesGroupedByCategoryUseCase
 import com.example.expensetracker.domain.usecase.month.GetMonthDataUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.map
+
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -17,13 +18,33 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MonthListViewModel @Inject constructor(
-    getMonthDataUseCase: GetMonthDataUseCase
+    getMonthDataUseCase: GetMonthDataUseCase,
+    getSubcategoriesUseCase: GetSubcategoriesGroupedByCategoryUseCase
 ) : ViewModel() {
 
     private val _effects = Channel<MonthListEffect>()
     val effects = _effects.receiveAsFlow()
     val state: StateFlow<MonthListState> =
-        getMonthDataUseCase.invoke()
+        combine(
+            getMonthDataUseCase.invoke(),
+            getSubcategoriesUseCase.invoke()
+        ) { monthData, categories ->
+            monthData.forEach { monthData ->
+                Log.d("MonthListViewModel", "Month: ${monthData.yearMonth}")
+                monthData.subcategoryTotals.forEach { subcategoryTotal ->
+                    Log.d("MonthListViewModel", "Category: ${subcategoryTotal.subcategory} Total: ${subcategoryTotal.total}")
+                }
+            }
+            MonthListState(
+                monthTotals = monthData,
+                categories = categories
+            )
+        }.stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5_000),
+            initialValue = MonthListState()
+        )
+        /*getMonthDataUseCase.invoke()
             .map { monthData ->
                 MonthListState(
                     months = monthData
@@ -33,7 +54,7 @@ class MonthListViewModel @Inject constructor(
                 scope = viewModelScope,
                 started = SharingStarted.WhileSubscribed(5_000),
                 initialValue = MonthListState()
-            )
+            )*/
 
 
     fun onEvent(event: MonthListEvent) {

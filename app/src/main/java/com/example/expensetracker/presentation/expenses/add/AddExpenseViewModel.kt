@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.math.RoundingMode
 import javax.inject.Inject
 
 @HiltViewModel
@@ -88,11 +89,16 @@ class AddExpenseViewModel @Inject constructor(
         viewModelScope.launch {
             formState.update { it.copy(isSaving = true) }
 
+            val normalizedAmount = amount
+                .toBigDecimal()
+                .setScale(2, RoundingMode.HALF_UP)
+                .toDouble()
+
             addExpenseUseCase(
                 Expense(
                     id = 0,
                     title = state.name,
-                    amount = amount,
+                    amount = normalizedAmount,
                     category = subcategory,
                     date = date
                 )

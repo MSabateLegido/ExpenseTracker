@@ -1,5 +1,6 @@
 package com.example.expensetracker.presentation.expenses.add
 
+import com.example.expensetracker.domain.model.category.CategoryWithChildren
 import com.example.expensetracker.domain.model.category.Subcategory
 import java.time.LocalDate
 

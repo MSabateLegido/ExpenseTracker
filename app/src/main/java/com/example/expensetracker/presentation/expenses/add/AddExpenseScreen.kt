@@ -56,6 +56,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.expensetracker.R
+import com.example.expensetracker.domain.model.category.CategoryWithChildren
 import com.example.expensetracker.domain.model.category.Subcategory
 import java.time.Instant
 import java.time.LocalDate
@@ -147,8 +148,10 @@ fun AddExpenseScreen(
 
                 OutlinedTextField(
                     value = state.amount,
-                    onValueChange = {
-                        onEvent(AddExpenseEvent.AmountChanged(it))
+                    onValueChange = { input ->
+                        limitTwoDecimals(input) {
+                            onEvent(AddExpenseEvent.AmountChanged(input))
+                        }
                     },
                     label = { Text(stringResource(id = R.string.add_expense_quantity_label)) },
                     modifier = Modifier
@@ -158,7 +161,7 @@ fun AddExpenseScreen(
                         keyboardType = KeyboardType.Decimal,
                         imeAction = ImeAction.Done
                     ),
-                    singleLine = true
+                    singleLine = true,
                 )
             }
         }
@@ -433,9 +436,6 @@ fun ExpenseDatePickerDialog(
     }
 }
 
-
-
-
 @Composable
 fun ColorDot(
     color: Color,
@@ -447,6 +447,16 @@ fun ColorDot(
             .clip(CircleShape)
             .background(color)
     )
+}
+
+fun limitTwoDecimals(input: String, changeTextEvent: () -> Unit) {
+    val filtered = input.replace(",", ".")
+
+    val regex = Regex("^\\d*\\.?\\d{0,2}$")
+
+    if (filtered.isEmpty() || regex.matches(filtered)) {
+        changeTextEvent
+    }
 }
 
 

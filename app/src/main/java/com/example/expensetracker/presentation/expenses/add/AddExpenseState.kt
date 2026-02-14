@@ -1,6 +1,7 @@
 package com.example.expensetracker.presentation.expenses.add
 
 import com.example.expensetracker.domain.model.category.Category
+import com.example.expensetracker.domain.model.category.CategoryWithChildren
 import com.example.expensetracker.domain.model.category.Subcategory
 import java.time.LocalDate
 
@@ -20,7 +21,3 @@ data class AddExpenseState(
             && !isSaving
 }
 
-data class CategoryWithChildren (
-    val category: Category,
-    val subcategories: List<Subcategory>
-)

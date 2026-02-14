@@ -1,9 +1,7 @@
 package com.example.expensetracker.presentation.month.list
 
 import androidx.compose.animation.animateContentSize
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -12,22 +10,20 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.example.expensetracker.domain.model.month.Month
+import com.example.expensetracker.domain.model.month.MonthData
+import com.example.expensetracker.domain.model.month.MonthTotal
 import com.example.expensetracker.utils.formatAmount
 import com.example.expensetracker.utils.formatMonthYear
-import java.util.Locale
+import java.time.YearMonth
 
 
 @Composable
@@ -42,12 +38,12 @@ fun MonthListScreen(
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         items(
-            items = state.months,
-            key = { it.month }
+            items = state.monthTotals,
+            key = { it.yearMonth }
         ) { month ->
             MonthItem(
-                month = month,
-                onClickMonth = { onEvent(MonthListEvent.OnClickMonth(month.month)) }
+                monthData = month,
+                onClickMonth = { onEvent(MonthListEvent.OnClickMonth(month.yearMonth)) }
             )
         }
     }
@@ -55,10 +51,9 @@ fun MonthListScreen(
 
 @Composable
 fun MonthItem(
-    month: Month,
+    monthData: MonthData,
     onClickMonth: () -> Unit
 ) {
-
     Card(
         onClick = onClickMonth,
         modifier = Modifier
@@ -77,7 +72,8 @@ fun MonthItem(
         ) {
 
             MonthHeader(
-                month = month
+                month = monthData.yearMonth,
+                monthTotal = monthData.total
             )
         }
     }
@@ -85,7 +81,8 @@ fun MonthItem(
 
 @Composable
 fun MonthHeader(
-    month: Month
+    month: YearMonth,
+    monthTotal: Double
 ) {
 
     Row(
@@ -98,13 +95,13 @@ fun MonthHeader(
 
         Text(
             modifier = Modifier.padding(bottom = 8.dp),
-            text = month.month.formatMonthYear(),
+            text = month.formatMonthYear(),
             style = MaterialTheme.typography.titleMedium,
             textAlign = TextAlign.Start
         )
 
         Text(
-            text = formatAmount(month.total),
+            text = formatAmount(monthTotal),
             style = MaterialTheme.typography.titleSmall,
             color = MaterialTheme.colorScheme.primary,
             textAlign = TextAlign.End

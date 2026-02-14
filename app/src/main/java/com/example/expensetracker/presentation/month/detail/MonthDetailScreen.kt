@@ -83,6 +83,7 @@ fun ExpenseItem(
 ) {
     Row(
         modifier = Modifier
+            .padding(8.dp)
             .fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {

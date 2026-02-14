@@ -5,9 +5,11 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import com.example.expensetracker.R
 import com.example.expensetracker.presentation.utils.ExpenseTrackerTopbar
 import com.example.expensetracker.utils.formatMonthYear
 import java.time.YearMonth
@@ -24,7 +26,7 @@ fun MonthDetailRoute(
     Scaffold(
         topBar = {
             ExpenseTrackerTopbar(
-                title = yearMonth.formatMonthYear(),
+                title = stringResource(R.string.month_detail_title),
                 onBack = { navController.navigateUp() }
             )
         }

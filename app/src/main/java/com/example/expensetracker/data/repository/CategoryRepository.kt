@@ -8,8 +8,8 @@ import com.example.expensetracker.data.local.entity.CategoryEntity
 import com.example.expensetracker.data.local.entity.SubcategoryEntity
 import com.example.expensetracker.data.local.entity.toUi
 import com.example.expensetracker.domain.model.category.Category
+import com.example.expensetracker.domain.model.category.CategoryWithChildren
 import com.example.expensetracker.domain.model.category.Subcategory
-import com.example.expensetracker.presentation.expenses.add.CategoryWithChildren
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
