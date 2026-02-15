@@ -50,6 +50,15 @@ class MonthDetailViewModel @Inject constructor(
             is MonthDetailEvent.DeleteExpense -> {
 
             }
+
+            MonthDetailEvent.OnNextMonthClicked -> {
+
+            }
+
+            MonthDetailEvent.OnPreviousMonthClicked -> {
+
+            }
+
         }
     }
 }

@@ -7,4 +7,6 @@ sealed interface MonthDetailEvent {
     data class DeleteExpense(val expenseId: Long) : MonthDetailEvent
     data class EditExpense(val expenseId: Long) : MonthDetailEvent
     data class DuplicateExpense(val expenseId: Long) : MonthDetailEvent
+    object OnPreviousMonthClicked : MonthDetailEvent
+    object OnNextMonthClicked : MonthDetailEvent
 }
