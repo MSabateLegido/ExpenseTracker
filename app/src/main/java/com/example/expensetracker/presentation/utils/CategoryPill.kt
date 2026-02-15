@@ -3,6 +3,7 @@ package com.example.expensetracker.presentation.utils
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -10,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.example.expensetracker.utils.contrastTextColor
 
@@ -29,11 +31,17 @@ fun CategoryPill(
                 shape = RoundedCornerShape(50)
             )
             .padding(horizontal = 10.dp, vertical = 4.dp)
+            .widthIn(
+                min = 0.dp,
+                max = 54.dp
+            )
     ) {
         Text(
             text = name,
             style = MaterialTheme.typography.labelSmall,
-            color = textColor
+            color = textColor,
+            overflow = TextOverflow.Ellipsis,
+            maxLines = 1
         )
     }
 }
