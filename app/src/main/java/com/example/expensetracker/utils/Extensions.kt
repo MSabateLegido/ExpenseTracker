@@ -22,6 +22,9 @@ fun Color.contrastTextColor(): Color {
     return if (luminance > 0.5f) Color.Black else Color.White
 }
 
-fun formatAmount(amount: Double): String {
-    return String.format(Locale.getDefault(), "%.2f €", amount)
-}
+fun Double.formatAmount(): String =
+    String.format(Locale.getDefault(), "%.2f €", this)
+
+
+fun Int.toYearMonth(): YearMonth =
+    YearMonth.of(this / 100, this % 100)

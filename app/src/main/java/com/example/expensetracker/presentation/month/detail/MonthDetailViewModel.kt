@@ -1,9 +1,9 @@
 package com.example.expensetracker.presentation.month.detail
 
-import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.expensetracker.domain.model.expense.DayExpenses
 import com.example.expensetracker.domain.usecase.expense.GetMonthExpensesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
@@ -24,9 +24,17 @@ class MonthDetailViewModel @Inject constructor(
     val state: StateFlow<MonthDetailState> =
         getAllExpensesUseCase.invoke(yearMonth = yearMonth)
             .map { expenses ->
-                Log.d("MONTH_DETAIL", expenses.toString())
+                val dayExpenses: List<DayExpenses> =
+                    expenses
+                        .groupBy { it.date }
+                        .map { (day, expenses) ->
+                            DayExpenses(
+                                date = day,
+                                expenses = expenses
+                            )
+                        }
                 MonthDetailState(
-                    expenses = expenses,
+                    dayExpenses = dayExpenses,
                     yearMonth = yearMonth
                 )
             }.stateIn(
