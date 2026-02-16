@@ -1,5 +1,6 @@
 package com.example.expensetracker.presentation.month.detail
 
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -56,7 +57,7 @@ class MonthDetailViewModel @Inject constructor(
             }
 
             is MonthDetailEvent.DeleteExpense -> {
-
+                Log.d("MonthDetailViewModel", "Deleting expense with id: ${event.expenseId}")
             }
 
             MonthDetailEvent.OnNextMonthClicked -> {

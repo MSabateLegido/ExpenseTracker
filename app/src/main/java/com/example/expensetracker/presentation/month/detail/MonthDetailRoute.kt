@@ -1,11 +1,14 @@
 package com.example.expensetracker.presentation.month.detail
 
+import androidx.compose.foundation.layout.calculateEndPadding
+import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
@@ -33,7 +36,11 @@ fun MonthDetailRoute(
     ) {  innerPadding ->
 
         MonthDetailScreen(
-            modifier = modifier.padding(innerPadding),
+            modifier = modifier.padding(
+                top = innerPadding.calculateTopPadding(),
+                start = innerPadding.calculateStartPadding(layoutDirection = LayoutDirection.Ltr),
+                end = innerPadding.calculateEndPadding(layoutDirection = LayoutDirection.Rtl)
+            ),
             state = state,
             onEvent = viewModel::onEvent
         )
