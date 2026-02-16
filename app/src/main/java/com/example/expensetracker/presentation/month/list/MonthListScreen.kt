@@ -135,7 +135,7 @@ fun MonthHeader(
         )
 
         Text(
-            text = formatAmount(monthTotal),
+            text = monthTotal.formatAmount(),
             style = MaterialTheme.typography.titleSmall,
             color = MaterialTheme.colorScheme.primary,
             textAlign = TextAlign.End
@@ -208,7 +208,7 @@ fun MonthCategoryGrid(
                 Spacer(modifier = Modifier.height(4.dp))
 
                 Text(
-                    text = formatAmount(item.total),
+                    text = item.total.formatAmount(),
                     style = MaterialTheme.typography.bodySmall
                 )
             }

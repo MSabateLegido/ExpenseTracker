@@ -2,7 +2,7 @@ package com.example.expensetracker.domain.usecase.month
 
 import com.example.expensetracker.data.repository.ExpenseRepository
 import com.example.expensetracker.domain.model.month.MonthData
-import com.example.expensetracker.domain.model.month.toYearMonth
+import com.example.expensetracker.utils.toYearMonth
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import javax.inject.Inject
