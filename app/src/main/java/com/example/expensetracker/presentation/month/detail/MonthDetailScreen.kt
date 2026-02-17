@@ -17,6 +17,9 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.KeyboardArrowDown
@@ -30,6 +33,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.key
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -72,22 +76,35 @@ fun MonthDetailScreen(
         )
 
         LazyColumn(
-            modifier = Modifier
-                .fillMaxSize(),
+            modifier = Modifier.fillMaxSize(),
             contentPadding = PaddingValues(bottom = 32.dp)
         ) {
+
             state.dayExpenses.forEach { dayExpenses ->
+
+                // Header
                 item(key = "header_${dayExpenses.date}") {
                     DayHeader(
                         day = dayExpenses.date,
-                        total = dayExpenses.getDayTotal()
+                        total = dayExpenses.total
                     )
                 }
 
-                item(key = "expenses_${dayExpenses.date}") {
-                    ExpensesList(
-                        expenses = dayExpenses.expenses,
-                        onEvent = onEvent
+                // Expenses virtualitzades
+                itemsIndexed(
+                    items = dayExpenses.expenses,
+                    key = { _, expense -> expense.id }
+                ) { index, expense ->
+
+                    val isFirst = index == 0
+                    val isLast = index == dayExpenses.expenses.lastIndex
+
+                    ExpenseCardItem(
+                        expense = expense,
+                        isFirst = isFirst,
+                        isLast = isLast,
+                        onEdit = { onEvent(MonthDetailEvent.EditExpense(expense.id)) },
+                        onDelete = { onEvent(MonthDetailEvent.DeleteExpense(expense.id)) }
                     )
                 }
             }
@@ -149,18 +166,66 @@ fun MonthTitle(
 }
 
 @Composable
+fun ExpenseCardItem(
+    expense: Expense,
+    isFirst: Boolean,
+    isLast: Boolean,
+    onEdit: () -> Unit,
+    onDelete: () -> Unit
+) {
+
+    val shape = when {
+        isFirst && isLast -> RoundedCornerShape(8.dp)
+        isFirst -> RoundedCornerShape(
+            topStart = 8.dp,
+            topEnd = 8.dp,
+            bottomStart = 0.dp,
+            bottomEnd = 0.dp
+        )
+        isLast -> RoundedCornerShape(
+            topStart = 0.dp,
+            topEnd = 0.dp,
+            bottomStart = 8.dp,
+            bottomEnd = 8.dp
+        )
+        else -> RoundedCornerShape(0.dp)
+    }
+
+    Card(
+        shape = shape,
+        modifier = Modifier
+            .fillMaxWidth(),
+        elevation = CardDefaults.cardElevation(2.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface
+        )
+    ) {
+        SwipeableExpenseItem(
+            expense = expense,
+            onEdit = onEdit,
+            onDelete = onDelete
+        )
+    }
+}
+
+@Composable
 fun DayHeader(
     day: LocalDate,
     total: Double
 ) {
+    val formatter = remember {
+        DateTimeFormatter.ofPattern("d MMM")
+    }
+
     Row(
         modifier = Modifier
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .padding(top = 16.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Text(
-            text = day.format(DateTimeFormatter.ofPattern("d MMM")),
+            text = day.format(formatter),
             style = MaterialTheme.typography.titleMedium
         )
 
@@ -169,60 +234,6 @@ fun DayHeader(
             style = MaterialTheme.typography.titleSmall,
             color = MaterialTheme.colorScheme.primary
         )
-    }
-}
-
-
-@Composable
-fun ExpensesList(
-    expenses: List<Expense>
-) {
-    Card(
-        modifier = Modifier
-            .padding(
-                vertical = 8.dp,
-                horizontal = 4.dp
-                ),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surface
-        )
-    ) {
-        expenses.forEach { expense ->
-            ExpenseItem(
-                expense = expense
-            )
-        }
-    }
-}
-
-@Composable
-fun ExpensesList(
-    expenses: List<Expense>,
-    onEvent: (MonthDetailEvent) -> Unit
-) {
-    Card(
-        modifier = Modifier
-            .padding(
-                vertical = 8.dp,
-                horizontal = 4.dp
-                ),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surface
-        )
-    ) {
-        expenses.forEach { expense ->
-            key(
-                expense.id
-            ) {
-                SwipeableExpenseItem(
-                    expense = expense,
-                    onEdit = { onEvent(MonthDetailEvent.EditExpense(expense.id)) },
-                    onDelete = { onEvent(MonthDetailEvent.DeleteExpense(expense.id)) }
-                )
-            }
-        }
     }
 }
 
@@ -248,7 +259,6 @@ fun SwipeableExpenseItem(
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(IntrinsicSize.Min)
     ) {
 
         val progress = (swipeableState.offset.value / maxRevealPx)
@@ -292,7 +302,7 @@ fun SwipeableExpenseItem(
                         FractionalThreshold(0.85f)
                     },
                     orientation = Orientation.Horizontal,
-                    velocityThreshold = Int.MAX_VALUE.dp
+                    velocityThreshold = 15000.dp
                 )
                 .clickable { onEdit() }
                 .fillMaxWidth()

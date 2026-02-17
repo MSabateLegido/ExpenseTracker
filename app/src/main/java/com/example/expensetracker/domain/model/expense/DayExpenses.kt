@@ -4,7 +4,6 @@ import java.time.LocalDate
 
 data class DayExpenses(
     val date: LocalDate,
-    val expenses: List<Expense>
-) {
-    fun getDayTotal(): Double = expenses.sumOf { it.amount }
-}
+    val expenses: List<Expense>,
+    val total: Double = expenses.sumOf { it.amount }
+)
