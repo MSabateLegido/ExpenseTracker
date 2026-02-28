@@ -1,4 +1,4 @@
-package com.example.expensetracker.presentation.categories
+package com.example.expensetracker.presentation.categories.add
 
 sealed interface AddCategoryEffect {
 

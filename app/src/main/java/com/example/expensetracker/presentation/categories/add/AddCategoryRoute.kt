@@ -1,4 +1,4 @@
-package com.example.expensetracker.presentation.categories
+package com.example.expensetracker.presentation.categories.add
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
