@@ -30,11 +30,11 @@ class AddCategoryViewModel @Inject constructor(
 
     private val _effects = Channel<AddCategoryEffect>()
     val effects = _effects.receiveAsFlow()
-    private val formState = MutableStateFlow(AddCategoryState())
+    private val _uiState = MutableStateFlow(AddCategoryState())
 
     val state: StateFlow<AddCategoryState> =
         combine(
-            formState,
+            _uiState,
             getCategoriesUseCase()
         ) { form, categories ->
             form.copy(categories = categories)
@@ -48,7 +48,7 @@ class AddCategoryViewModel @Inject constructor(
     fun onEvent(event: AddCategoryEvent) {
         when (event) {
             is AddCategoryEvent.CategoryColorChanged ->
-                formState.update {
+                _uiState.update {
                     it.copy(
                         categoryColor = event.color,
                         subcategoryColor = event.color
@@ -56,16 +56,16 @@ class AddCategoryViewModel @Inject constructor(
                 }
 
             is AddCategoryEvent.CategoryNameChanged ->
-                formState.update { it.copy(categoryName = event.name) }
+                _uiState.update { it.copy(categoryName = event.name) }
 
             is AddCategoryEvent.SubcategoryNameChanged ->
-                formState.update { it.copy(subcategoryName = event.name) }
+                _uiState.update { it.copy(subcategoryName = event.name) }
 
             is AddCategoryEvent.SubcategoryColorChanged ->
-                formState.update { it.copy(subcategoryColor = event.color) }
+                _uiState.update { it.copy(subcategoryColor = event.color) }
 
             is AddCategoryEvent.ExistingCategorySelected ->
-                formState.update {
+                _uiState.update {
                     it.copy(
                         categoryParent = event.category,
                         isNewCategory = false,
@@ -74,7 +74,7 @@ class AddCategoryViewModel @Inject constructor(
                 }
 
             AddCategoryEvent.NewCategorySelected ->
-                formState.update {
+                _uiState.update {
                     it.copy(
                         categoryParent = null,
                         isNewCategory = true

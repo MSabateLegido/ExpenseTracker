@@ -5,12 +5,18 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.expensetracker.domain.model.expense.DayExpenses
+import com.example.expensetracker.domain.usecase.category.GetSubcategoriesGroupedByCategoryUseCase
+import com.example.expensetracker.domain.usecase.expense.DeleteExpenseUseCase
 import com.example.expensetracker.domain.usecase.expense.GetMonthExpensesUseCase
+import com.example.expensetracker.domain.usecase.expense.UpdateExpenseUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import java.time.YearMonth
 import javax.inject.Inject
 
@@ -18,56 +24,85 @@ import javax.inject.Inject
 class MonthDetailViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     getAllExpensesUseCase: GetMonthExpensesUseCase,
+    getCategoriesUseCase: GetSubcategoriesGroupedByCategoryUseCase,
+    private val updateExpenseUseCase: UpdateExpenseUseCase,
+    private val deleteExpenseUseCase: DeleteExpenseUseCase
 ) : ViewModel()  {
     private val yearMonth: YearMonth =
         YearMonth.parse(savedStateHandle["yearMonth"]!!)
 
+    private val _uiState = MutableStateFlow(MonthDetailState(yearMonth = yearMonth))
+
+
     val state: StateFlow<MonthDetailState> =
-        getAllExpensesUseCase.invoke(yearMonth = yearMonth)
-            .map { expenses ->
-                val dayExpenses: List<DayExpenses> =
-                    expenses
-                        .groupBy { it.date }
-                        .map { (day, expenses) ->
-                            DayExpenses(
-                                date = day,
-                                expenses = expenses
-                            )
-                        }
-                MonthDetailState(
-                    dayExpenses = dayExpenses,
-                    yearMonth = yearMonth
-                )
-            }.stateIn(
-                scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(5_000),
-                initialValue = MonthDetailState()
+        combine(
+            _uiState,
+            getAllExpensesUseCase(yearMonth = yearMonth),
+            getCategoriesUseCase())
+        { ui, expenses, categories ->
+
+            val grouped = expenses
+                .groupBy { it.date }
+                .map { (day, list) ->
+                    DayExpenses(date = day, expenses = list)
+                }
+
+            ui.copy(
+                dayExpenses = grouped,
+                categories = categories
             )
+        }.stateIn(
+            viewModelScope,
+            SharingStarted.WhileSubscribed(5_000),
+            _uiState.value
+        )
 
 
     fun onEvent(event: MonthDetailEvent) {
         when(event) {
 
-            is MonthDetailEvent.DuplicateExpense -> {
-
-            }
-
-            is MonthDetailEvent.EditExpense -> {
-
+            is MonthDetailEvent.OnClickExpense -> {
+                _uiState.update {
+                    it.copy(selectedExpense = event.expense)
+                }
             }
 
             is MonthDetailEvent.DeleteExpense -> {
-                Log.d("MonthDetailViewModel", "Deleting expense with id: ${event.expenseId}")
+                viewModelScope.launch {
+                    deleteExpenseUseCase(event.expense)
+                }
             }
 
-            MonthDetailEvent.OnNextMonthClicked -> {
+            is MonthDetailEvent.UpdateExpense -> {
+                viewModelScope.launch {
+                    updateExpenseUseCase(event.expense)
+                }
+            }
+
+            is MonthDetailEvent.UndoDelete -> {
 
             }
 
-            MonthDetailEvent.OnPreviousMonthClicked -> {
+            MonthDetailEvent.OnNextMonth -> {
 
             }
 
+            MonthDetailEvent.OnPreviousMonth -> {
+
+            }
+
+            MonthDetailEvent.DismissBottomSheet -> {
+                _uiState.update {
+                    it.copy(selectedExpense = null)
+                }
+            }
+
+        }
+    }
+
+    private fun closeBottomSheet() {
+        _uiState.update {
+            it.copy(selectedExpense = null)
         }
     }
 }
