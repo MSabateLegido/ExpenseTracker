@@ -20,7 +20,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AddExpenseViewModel @Inject constructor(
-    private val getCategoriesWithSubcategories: GetSubcategoriesGroupedByCategoryUseCase,
+    getCategoriesWithSubcategories: GetSubcategoriesGroupedByCategoryUseCase,
     private val addExpenseUseCase: AddExpenseUseCase
 ) : ViewModel() {
     private val _effects = Channel<AddExpenseEffect>()
