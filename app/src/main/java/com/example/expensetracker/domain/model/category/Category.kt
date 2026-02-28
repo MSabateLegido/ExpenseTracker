@@ -13,6 +13,7 @@ data class Category(
 
 fun Category.toEntity(): CategoryEntity =
     CategoryEntity(
+        id = id,
         name = name,
         color = color.toArgb()
     )

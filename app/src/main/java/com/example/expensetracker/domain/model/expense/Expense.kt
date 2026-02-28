@@ -14,6 +14,7 @@ data class Expense(
 
 fun Expense.toEntity(): ExpenseEntity =
     ExpenseEntity(
+        id = id,
         title = title,
         amount = amount,
         subcategoryId = category.id,
