@@ -19,6 +19,14 @@ class ExpenseRepository @Inject constructor(
         expenseDao.insert(expense.toEntity())
     }
 
+    suspend fun updateExpense(expense: Expense) {
+        expenseDao.update(expense.toEntity())
+    }
+
+    suspend fun deleteExpense(expense: Expense) {
+        expenseDao.delete(expense.toEntity())
+    }
+
     fun getAllExpenses(): Flow<List<Expense>> =
         expenseDao
             .getAllExpenses()

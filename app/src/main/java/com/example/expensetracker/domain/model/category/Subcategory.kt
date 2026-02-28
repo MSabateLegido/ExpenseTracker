@@ -13,6 +13,7 @@ data class Subcategory(
 
 fun Subcategory.toEntity(): SubcategoryEntity =
     SubcategoryEntity(
+        id = id,
         name = name,
         color = color.toArgb(),
         categoryId = category.id
