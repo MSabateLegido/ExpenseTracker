@@ -9,11 +9,14 @@ import com.example.expensetracker.domain.usecase.category.GetSubcategoriesGroupe
 import com.example.expensetracker.domain.usecase.expense.DeleteExpenseUseCase
 import com.example.expensetracker.domain.usecase.expense.GetMonthExpensesUseCase
 import com.example.expensetracker.domain.usecase.expense.UpdateExpenseUseCase
+import com.example.expensetracker.presentation.month.list.MonthListEffect
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -28,6 +31,9 @@ class MonthDetailViewModel @Inject constructor(
     private val updateExpenseUseCase: UpdateExpenseUseCase,
     private val deleteExpenseUseCase: DeleteExpenseUseCase
 ) : ViewModel()  {
+
+    private val _effects = Channel<MonthDetailEffect>()
+    val effects = _effects.receiveAsFlow()
     private val yearMonth: YearMonth =
         YearMonth.parse(savedStateHandle["yearMonth"]!!)
 
@@ -97,12 +103,11 @@ class MonthDetailViewModel @Inject constructor(
                 }
             }
 
-        }
-    }
-
-    private fun closeBottomSheet() {
-        _uiState.update {
-            it.copy(selectedExpense = null)
+            MonthDetailEvent.AddExpensesClick -> {
+                viewModelScope.launch {
+                    _effects.send(MonthDetailEffect.NavigateToAddExpense)
+                }
+            }
         }
     }
 }
