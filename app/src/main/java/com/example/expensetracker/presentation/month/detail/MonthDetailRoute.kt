@@ -3,6 +3,10 @@ package com.example.expensetracker.presentation.month.detail
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -13,6 +17,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.example.expensetracker.R
+import com.example.expensetracker.presentation.month.list.MonthListEffectHandler
+import com.example.expensetracker.presentation.month.list.MonthListEvent
 import com.example.expensetracker.presentation.utils.ExpenseTrackerTopbar
 import com.example.expensetracker.utils.formatMonthYear
 import java.time.YearMonth
@@ -32,8 +38,19 @@ fun MonthDetailRoute(
                 title = stringResource(R.string.month_detail_title),
                 onBack = { navController.navigateUp() }
             )
+        },
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = { viewModel.onEvent(MonthDetailEvent.AddExpensesClick) }
+            ) {
+                Icon(Icons.Default.Add, contentDescription = "Add expense")
+            }
         }
     ) {  innerPadding ->
+        MonthDetailEffectHandler(
+            effects = viewModel.effects,
+            navController = navController
+        )
 
         MonthDetailScreen(
             modifier = modifier.padding(
