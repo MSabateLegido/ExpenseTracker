@@ -1,10 +1,14 @@
 package com.example.expensetracker.presentation.month.detail
 
 import android.util.Log
+import androidx.compose.runtime.remember
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.expensetracker.domain.model.category.CategoryUiModel
+import com.example.expensetracker.domain.model.category.SubcategoryUiModel
 import com.example.expensetracker.domain.model.expense.DayExpenses
+import com.example.expensetracker.domain.model.expense.ExpenseRowUiModel
 import com.example.expensetracker.domain.usecase.category.GetSubcategoriesGroupedByCategoryUseCase
 import com.example.expensetracker.domain.usecase.expense.DeleteExpenseUseCase
 import com.example.expensetracker.domain.usecase.expense.GetMonthExpensesUseCase
@@ -21,6 +25,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.YearMonth
+import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
 @HiltViewModel
@@ -44,24 +49,113 @@ class MonthDetailViewModel @Inject constructor(
         combine(
             _uiState,
             getAllExpensesUseCase(yearMonth = yearMonth),
-            getCategoriesUseCase())
-        { ui, expenses, categories ->
+            getCategoriesUseCase()
+        ) { ui, expenses, categories ->
 
-            val grouped = expenses
-                .groupBy { it.date }
-                .map { (day, list) ->
-                    DayExpenses(date = day, expenses = list)
+            // 1. Ordenar
+            /*val sortedExpenses = when (ui.sorting) {
+                Sorting.ByDate -> expenses.sortedBy { it.date }
+                Sorting.ByAmount -> expenses.sortedBy { it.amount }
+            }.let {
+                when (ui.sortingOrder) {
+                    SortingOrder.Ascending -> it
+                    SortingOrder.Descending -> it.reversed()
+                }
+            }*/
+
+            val uiState = when (ui.grouping) {
+
+                Grouping.ByDay -> {
+                    val formatter = DateTimeFormatter.ofPattern("d MMM")
+
+                    val grouped = expenses.groupBy { it.date }
+
+                    val sortedDays = when (ui.sortingOrder) {
+                        SortingOrder.Ascending -> grouped.toSortedMap()
+                        SortingOrder.Descending -> grouped.toSortedMap(compareByDescending { it })
+                    }
+
+                    val items = buildList {
+
+                        sortedDays.forEach { (date, expensesOfDay) ->
+
+                            val total = expensesOfDay.sumOf { it.amount }
+
+                            add(
+                                ExpenseRowUiModel.Header(
+                                    title = date.format(formatter),
+                                    total = total
+                                )
+                            )
+
+                            expensesOfDay.forEachIndexed { index, expense ->
+
+                                val isFirst = index == 0
+                                val isLast = index == expensesOfDay.lastIndex
+
+                                add(
+                                    ExpenseRowUiModel.Item(
+                                        expense = expense,
+                                        isFirst = isFirst,
+                                        isLast = isLast
+                                    )
+                                )
+                            }
+                        }
+                    }
+
+                    ExpenseListUiState.ByDay(items)
                 }
 
+                Grouping.ByCategory -> {
+
+                    val categoryUiModels = categories.map { parent ->
+
+                        val subcategoriesUi = parent.subcategories.map { subcategory ->
+
+                            val expensesOfSubcategory = expenses
+                                .filter { it.category.id == subcategory.id }
+
+                            val sortedExpenses = when (ui.sorting) {
+                                Sorting.ByDate -> expensesOfSubcategory.sortedBy { it.date }
+                                Sorting.ByAmount -> expensesOfSubcategory.sortedBy { it.amount }
+                            }.let {
+                                when (ui.sortingOrder) {
+                                    SortingOrder.Ascending -> it
+                                    SortingOrder.Descending -> it.reversed()
+                                }
+                            }
+
+                            SubcategoryUiModel(
+                                subcategory = subcategory,
+                                total = expensesOfSubcategory.sumOf { it.amount },
+                                expenses = sortedExpenses,
+                                isExpanded = false
+                            )
+                        }
+
+                        CategoryUiModel(
+                            parentCategory = parent.category,
+                            total = subcategoriesUi.sumOf { it.total },
+                            subcategories = subcategoriesUi
+                        )
+                    }
+
+                    ExpenseListUiState.ByCategory(categoryUiModels)
+                }
+            }
+
             ui.copy(
-                dayExpenses = grouped,
-                categories = categories
+                expenses = expenses,
+                categories = categories,
+                uiState = uiState
             )
-        }.stateIn(
-            viewModelScope,
-            SharingStarted.WhileSubscribed(5_000),
-            _uiState.value
-        )
+        }
+            .stateIn(
+                viewModelScope,
+                SharingStarted.WhileSubscribed(5_000),
+                _uiState.value
+            )
 
 
     fun onEvent(event: MonthDetailEvent) {

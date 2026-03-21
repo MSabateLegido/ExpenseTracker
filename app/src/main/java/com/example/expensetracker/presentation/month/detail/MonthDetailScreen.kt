@@ -1,5 +1,6 @@
 package com.example.expensetracker.presentation.month.detail
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -52,6 +53,7 @@ import com.example.expensetracker.presentation.expenses.add.limitTwoDecimals
 import com.example.expensetracker.presentation.components.category.CategoryPill
 import com.example.expensetracker.presentation.components.category.CategorySelectorDropdown
 import com.example.expensetracker.presentation.components.expense.ExpenseDateField
+import com.example.expensetracker.presentation.components.expense.ExpenseListByDay
 import com.example.expensetracker.utils.formatAmount
 import com.example.expensetracker.utils.formatMonthYear
 import java.time.LocalDate
@@ -78,39 +80,21 @@ fun MonthDetailScreen(
             onPreviousMonth = { onEvent(MonthDetailEvent.OnPreviousMonth) }
         )
 
-        LazyColumn(
-            modifier = Modifier.fillMaxSize(),
-            contentPadding = PaddingValues(bottom = 32.dp)
-        ) {
+        when (state.uiState) {
+            ExpenseListUiState.Loading -> {
 
-            state.dayExpenses.forEach { dayExpenses ->
+            }
+            is ExpenseListUiState.ByDay ->{
+                ExpenseListByDay(
+                    items = state.uiState.items,
+                    onClickExpense = { onEvent(MonthDetailEvent.OnClickExpense(it)) }
+                )
+            }
+            is ExpenseListUiState.ByCategory -> {
 
-                // Header
-                item(key = "header_${dayExpenses.date}") {
-                    DayHeader(
-                        day = dayExpenses.date,
-                        total = dayExpenses.total
-                    )
-                }
-
-                itemsIndexed(
-                    items = dayExpenses.expenses,
-                    key = { _, expense -> expense.id }
-                ) { index, expense ->
-
-                    val isFirst = index == 0
-                    val isLast = index == dayExpenses.expenses.lastIndex
-
-                    ExpenseCardItem(
-                        expense = expense,
-                        isFirst = isFirst,
-                        isLast = isLast,
-                        onClickExpense = { onEvent(MonthDetailEvent.OnClickExpense(expense)) },
-                        modifier = Modifier.animateItem()
-                    )
-                }
             }
         }
+
     }
 
     if (state.selectedExpense != null) {
@@ -172,108 +156,6 @@ fun MonthTitle(
                 )
             }
         }
-    }
-}
-
-@Composable
-fun ExpenseCardItem(
-    expense: Expense,
-    isFirst: Boolean,
-    isLast: Boolean,
-    onClickExpense: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-
-    val shape = when {
-        isFirst && isLast -> RoundedCornerShape(8.dp)
-        isFirst -> RoundedCornerShape(
-            topStart = 8.dp,
-            topEnd = 8.dp,
-            bottomStart = 0.dp,
-            bottomEnd = 0.dp
-        )
-        isLast -> RoundedCornerShape(
-            topStart = 0.dp,
-            topEnd = 0.dp,
-            bottomStart = 8.dp,
-            bottomEnd = 8.dp
-        )
-        else -> RoundedCornerShape(0.dp)
-    }
-
-    Card(
-        shape = shape,
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable { onClickExpense() },
-        elevation = CardDefaults.cardElevation(2.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surface
-        )
-    ) {
-        ExpenseItem(
-            expense = expense,
-            modifier = modifier.fillMaxWidth()
-        )
-    }
-}
-
-@Composable
-fun DayHeader(
-    day: LocalDate,
-    total: Double
-) {
-    val formatter = remember {
-        DateTimeFormatter.ofPattern("d MMM")
-    }
-
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(top = 16.dp, bottom = 8.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
-    ) {
-        Text(
-            text = day.format(formatter),
-            style = MaterialTheme.typography.titleMedium
-        )
-
-        Text(
-            text = total.formatAmount(),
-            style = MaterialTheme.typography.titleSmall,
-            color = MaterialTheme.colorScheme.primary
-        )
-    }
-}
-
-@Composable
-fun ExpenseItem(
-    expense: Expense,
-    modifier: Modifier = Modifier
-) {
-    Row(
-        modifier = modifier
-            .fillMaxSize()
-            .background(color = MaterialTheme.colorScheme.surface)
-            .padding(12.dp),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Column(
-            verticalArrangement = Arrangement.spacedBy(4.dp)
-        ) {
-            Text(expense.title, style = MaterialTheme.typography.bodyLarge)
-            CategoryPill(
-                name = expense.category.name,
-                color = expense.category.color
-            )
-        }
-
-        Text(
-            text = expense.amount.formatAmount(),
-            style = MaterialTheme.typography.bodyLarge
-        )
     }
 }
 
