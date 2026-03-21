@@ -1,4 +1,4 @@
-package com.example.expensetracker.presentation.utils
+package com.example.expensetracker.presentation.components.category
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import com.example.expensetracker.R
 import com.example.expensetracker.domain.model.category.CategoryWithChildren
 import com.example.expensetracker.domain.model.category.Subcategory
+import com.example.expensetracker.presentation.components.utils.ColorDot
 import kotlin.collections.forEach
 
 

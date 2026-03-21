@@ -1,4 +1,4 @@
-package com.example.expensetracker.presentation.utils
+package com.example.expensetracker.presentation.components.category
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box

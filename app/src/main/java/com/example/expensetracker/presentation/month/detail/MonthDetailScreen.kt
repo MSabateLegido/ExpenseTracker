@@ -49,9 +49,9 @@ import androidx.compose.ui.unit.dp
 import com.example.expensetracker.domain.model.category.CategoryWithChildren
 import com.example.expensetracker.domain.model.expense.Expense
 import com.example.expensetracker.presentation.expenses.add.limitTwoDecimals
-import com.example.expensetracker.presentation.utils.CategoryPill
-import com.example.expensetracker.presentation.utils.CategorySelectorDropdown
-import com.example.expensetracker.presentation.utils.ExpenseDateField
+import com.example.expensetracker.presentation.components.category.CategoryPill
+import com.example.expensetracker.presentation.components.category.CategorySelectorDropdown
+import com.example.expensetracker.presentation.components.expense.ExpenseDateField
 import com.example.expensetracker.utils.formatAmount
 import com.example.expensetracker.utils.formatMonthYear
 import java.time.LocalDate
