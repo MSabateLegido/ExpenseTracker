@@ -11,7 +11,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.example.expensetracker.R
-import com.example.expensetracker.presentation.utils.ExpenseTrackerTopbar
+import com.example.expensetracker.presentation.components.utils.ExpenseTrackerTopbar
 
 
 @OptIn(ExperimentalMaterial3Api::class)
