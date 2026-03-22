@@ -6,5 +6,5 @@ data class SubcategoryUiModel(
     val subcategory: Subcategory,
     val total: Double,
     val expenses: List<Expense>,
-    val isExpanded: Boolean
+    var isExpanded: Boolean
 )

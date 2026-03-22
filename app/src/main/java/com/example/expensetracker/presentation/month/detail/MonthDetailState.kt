@@ -2,7 +2,6 @@ package com.example.expensetracker.presentation.month.detail
 
 import com.example.expensetracker.domain.model.category.CategoryUiModel
 import com.example.expensetracker.domain.model.category.CategoryWithChildren
-import com.example.expensetracker.domain.model.expense.DayExpenses
 import com.example.expensetracker.domain.model.expense.Expense
 import com.example.expensetracker.domain.model.expense.ExpenseRowUiModel
 import java.time.YearMonth
@@ -13,9 +12,11 @@ data class MonthDetailState(
     val selectedExpense: Expense? = null,
     val categories: List<CategoryWithChildren> = emptyList(),
 
-    val grouping: Grouping = Grouping.ByDay,
-    val sorting: Sorting = Sorting.ByDate,
-    val sortingOrder: SortingOrder = SortingOrder.Descending,
+    val grouping: Grouping = Grouping.ByCategory,
+    val sorting: Sorting = Sorting.ByAmount,
+    val sortingOrder: SortingOrder = SortingOrder.Ascending,
+
+    val expandedSubcategories: Set<Long> = emptySet(),
 
     val uiState: ExpenseListUiState = ExpenseListUiState.Loading
 )
@@ -38,7 +39,7 @@ sealed class Grouping {
 }
 
 sealed class Sorting {
-    object ByDate : Sorting()
+    object ByDefault : Sorting()
     object ByAmount : Sorting()
 }
 

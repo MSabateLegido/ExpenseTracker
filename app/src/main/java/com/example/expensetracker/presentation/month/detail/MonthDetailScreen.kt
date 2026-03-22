@@ -53,6 +53,7 @@ import com.example.expensetracker.presentation.expenses.add.limitTwoDecimals
 import com.example.expensetracker.presentation.components.category.CategoryPill
 import com.example.expensetracker.presentation.components.category.CategorySelectorDropdown
 import com.example.expensetracker.presentation.components.expense.ExpenseDateField
+import com.example.expensetracker.presentation.components.expense.ExpenseListByCategory
 import com.example.expensetracker.presentation.components.expense.ExpenseListByDay
 import com.example.expensetracker.utils.formatAmount
 import com.example.expensetracker.utils.formatMonthYear
@@ -91,7 +92,11 @@ fun MonthDetailScreen(
                 )
             }
             is ExpenseListUiState.ByCategory -> {
-
+                ExpenseListByCategory(
+                    categories = state.uiState.categories,
+                    onClickExpense = { onEvent(MonthDetailEvent.OnClickExpense(it)) },
+                    onClickSubcategory = { onEvent(MonthDetailEvent.OnClickSubcategory(it)) }
+                )
             }
         }
 
