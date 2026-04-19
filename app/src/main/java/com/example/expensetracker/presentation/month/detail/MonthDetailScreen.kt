@@ -81,6 +81,8 @@ fun MonthDetailScreen(
             onPreviousMonth = { onEvent(MonthDetailEvent.OnPreviousMonth) }
         )
 
+        Spacer(Modifier.height(32.dp))
+
         when (state.uiState) {
             ExpenseListUiState.Loading -> {
 

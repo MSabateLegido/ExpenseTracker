@@ -12,6 +12,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.DividerDefaults
 import androidx.compose.material3.HorizontalDivider
@@ -38,7 +39,7 @@ fun ExpenseListByCategory(
 ) {
     LazyColumn(
         modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(16.dp),
+        verticalArrangement = Arrangement.spacedBy(32.dp),
         contentPadding = PaddingValues(bottom = 32.dp)
     ) {
         items(categories) { category ->
@@ -74,13 +75,17 @@ fun CategorySection(
 
             Text(
                 text = category.total.formatAmount(),
-                style = MaterialTheme.typography.titleMedium
+                style = MaterialTheme.typography.titleSmall,
+                color = MaterialTheme.colorScheme.primary
             )
         }
 
         Card(
             shape = RoundedCornerShape(16.dp),
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.surface
+            )
         ) {
             Column {
                 category.subcategories.forEachIndexed { index, subcategory ->
@@ -142,8 +147,11 @@ fun SubcategoryItem(
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 12.dp, vertical = 4.dp),
-                shape = RoundedCornerShape(12.dp)
+                    .padding(start = 12.dp, end = 12.dp, top = 4.dp, bottom = 12.dp),
+                shape = RoundedCornerShape(12.dp),
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.surfaceVariant
+                )
             ) {
                 Column {
                     subcategory.expenses.forEachIndexed { index, expense ->
@@ -152,10 +160,6 @@ fun SubcategoryItem(
                             expense = expense,
                             onClick = { onClickExpense(expense) }
                         )
-
-                        if (index != subcategory.expenses.lastIndex) {
-                            Divider()
-                        }
                     }
                 }
             }
@@ -172,7 +176,7 @@ fun ExpenseItemRow(
         modifier = Modifier
             .fillMaxWidth()
             .clickable(onClick = onClick)
-            .padding(12.dp),
+            .padding(16.dp),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Text(

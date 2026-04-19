@@ -14,7 +14,7 @@ data class MonthDetailState(
 
     val grouping: Grouping = Grouping.ByCategory,
     val sorting: Sorting = Sorting.ByAmount,
-    val sortingOrder: SortingOrder = SortingOrder.Ascending,
+    val sortingOrder: SortingOrder = SortingOrder.Descending,
 
     val expandedSubcategories: Set<Long> = emptySet(),
 
