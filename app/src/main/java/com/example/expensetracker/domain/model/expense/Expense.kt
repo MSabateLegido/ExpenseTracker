@@ -8,7 +8,7 @@ data class Expense(
     val id: Long,
     val title: String,
     val amount: Double,
-    val category: Subcategory,
+    val subcategory: Subcategory,
     val date: LocalDate
 )
 
@@ -17,6 +17,6 @@ fun Expense.toEntity(): ExpenseEntity =
         id = id,
         title = title,
         amount = amount,
-        subcategoryId = category.id,
+        subcategoryId = subcategory.id,
         date = date
     )

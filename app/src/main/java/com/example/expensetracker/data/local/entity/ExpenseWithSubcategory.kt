@@ -19,7 +19,7 @@ fun ExpenseWithSubcategory.toUi(): Expense =
         id = expense.id,
         title = expense.title,
         amount = expense.amount,
-        category = subcategory.toUi(),
+        subcategory = subcategory.toUi(),
         date = expense.date
     )
 

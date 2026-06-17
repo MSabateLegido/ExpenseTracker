@@ -26,7 +26,7 @@ import javax.inject.Inject
 @HiltViewModel
 class MonthDetailViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    getAllExpensesUseCase: GetMonthExpensesUseCase,
+    getMonthExpensesUseCase: GetMonthExpensesUseCase,
     getCategoriesUseCase: GetSubcategoriesGroupedByCategoryUseCase,
     private val updateExpenseUseCase: UpdateExpenseUseCase,
     private val deleteExpenseUseCase: DeleteExpenseUseCase
@@ -43,18 +43,16 @@ class MonthDetailViewModel @Inject constructor(
     val state: StateFlow<MonthDetailState> =
         combine(
             _uiState,
-            getAllExpensesUseCase(yearMonth = yearMonth),
-            getCategoriesUseCase())
-        { ui, expenses, categories ->
-
-            val grouped = expenses
-                .groupBy { it.date }
-                .map { (day, list) ->
-                    DayExpenses(date = day, expenses = list)
-                }
+            getMonthExpensesUseCase(
+                yearMonth,
+                _uiState.value.groupBy,
+                _uiState.value.orderBy
+            ),
+            getCategoriesUseCase()
+        ) { ui, groupedExpenses, categories ->
 
             ui.copy(
-                dayExpenses = grouped,
+                expenseGroups = groupedExpenses,
                 categories = categories
             )
         }.stateIn(

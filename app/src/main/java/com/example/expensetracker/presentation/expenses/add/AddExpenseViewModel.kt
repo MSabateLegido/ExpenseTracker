@@ -99,7 +99,7 @@ class AddExpenseViewModel @Inject constructor(
                     id = 0,
                     title = state.name,
                     amount = normalizedAmount,
-                    category = subcategory,
+                    subcategory = subcategory,
                     date = date
                 )
             )

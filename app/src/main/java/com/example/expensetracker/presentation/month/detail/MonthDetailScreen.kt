@@ -4,7 +4,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
@@ -14,8 +13,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -78,7 +75,7 @@ fun MonthDetailScreen(
             onPreviousMonth = { onEvent(MonthDetailEvent.OnPreviousMonth) }
         )
 
-        LazyColumn(
+        /*LazyColumn(
             modifier = Modifier.fillMaxSize(),
             contentPadding = PaddingValues(bottom = 32.dp)
         ) {
@@ -110,7 +107,7 @@ fun MonthDetailScreen(
                     )
                 }
             }
-        }
+        }*/
     }
 
     if (state.selectedExpense != null) {
@@ -265,8 +262,8 @@ fun ExpenseItem(
         ) {
             Text(expense.title, style = MaterialTheme.typography.bodyLarge)
             CategoryPill(
-                name = expense.category.name,
-                color = expense.category.color
+                name = expense.subcategory.name,
+                color = expense.subcategory.color
             )
         }
 
@@ -293,7 +290,7 @@ fun ExpenseBottomSheet(
 
     var title by remember(expense.id) { mutableStateOf(expense.title) }
     var amount by remember(expense.id) { mutableStateOf(expense.amount.toString()) }
-    var category by remember(expense.id) { mutableStateOf(expense.category) }
+    var category by remember(expense.id) { mutableStateOf(expense.subcategory) }
     var date by remember(expense.id) { mutableStateOf(expense.date) }
 
     ModalBottomSheet(
@@ -303,7 +300,7 @@ fun ExpenseBottomSheet(
                     expense.copy(
                         title = title,
                         amount = amount.toDouble(),
-                        category = category,
+                        subcategory = category,
                         date = date
                     )
                 ))
