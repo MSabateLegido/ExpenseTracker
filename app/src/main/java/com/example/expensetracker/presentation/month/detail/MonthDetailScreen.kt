@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -21,7 +22,11 @@ import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
+import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -45,10 +50,15 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.expensetracker.domain.model.category.CategoryWithChildren
 import com.example.expensetracker.domain.model.expense.Expense
+import com.example.expensetracker.domain.model.expense.ExpenseGroupBy
+import com.example.expensetracker.domain.model.expense.ExpenseOrderBy
 import com.example.expensetracker.presentation.expenses.add.limitTwoDecimals
 import com.example.expensetracker.presentation.components.category.CategoryPill
 import com.example.expensetracker.presentation.components.category.CategorySelectorDropdown
+import com.example.expensetracker.presentation.components.expense.ExpenseBottomSheet
 import com.example.expensetracker.presentation.components.expense.ExpenseDateField
+import com.example.expensetracker.presentation.components.expense.ExpensesList
+import com.example.expensetracker.presentation.components.month.MonthTitle
 import com.example.expensetracker.utils.formatAmount
 import com.example.expensetracker.utils.formatMonthYear
 import java.time.LocalDate
@@ -75,39 +85,17 @@ fun MonthDetailScreen(
             onPreviousMonth = { onEvent(MonthDetailEvent.OnPreviousMonth) }
         )
 
-        /*LazyColumn(
-            modifier = Modifier.fillMaxSize(),
-            contentPadding = PaddingValues(bottom = 32.dp)
-        ) {
+        GroupAndOrderSelectors(
+            groupBy = state.groupBy,
+            orderBy = state.orderBy,
+            onEvent = onEvent
+        )
 
-            state.dayExpenses.forEach { dayExpenses ->
-
-                // Header
-                item(key = "header_${dayExpenses.date}") {
-                    DayHeader(
-                        day = dayExpenses.date,
-                        total = dayExpenses.total
-                    )
-                }
-
-                itemsIndexed(
-                    items = dayExpenses.expenses,
-                    key = { _, expense -> expense.id }
-                ) { index, expense ->
-
-                    val isFirst = index == 0
-                    val isLast = index == dayExpenses.expenses.lastIndex
-
-                    ExpenseCardItem(
-                        expense = expense,
-                        isFirst = isFirst,
-                        isLast = isLast,
-                        onClickExpense = { onEvent(MonthDetailEvent.OnClickExpense(expense)) },
-                        modifier = Modifier.animateItem()
-                    )
-                }
-            }
-        }*/
+        ExpensesList(
+            expenseGroups = state.expenseGroups,
+            groupBy = state.groupBy,
+            onEvent = onEvent
+        )
     }
 
     if (state.selectedExpense != null) {
@@ -120,278 +108,197 @@ fun MonthDetailScreen(
 }
 
 @Composable
-fun MonthTitle(
-    title: String,
-    onNextMonth: () -> Unit,
-    onPreviousMonth: () -> Unit
+fun GroupAndOrderSelectors(
+    groupBy: ExpenseGroupBy,
+    orderBy: ExpenseOrderBy,
+    onEvent: (MonthDetailEvent) -> Unit,
+    modifier: Modifier = Modifier
 ) {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth(),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surface
-        )
+    Row(
+        modifier = modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(12.dp)
     ) {
+        GroupSelector(
+            modifier = Modifier.weight(1f),
+            groupBy = groupBy,
+            onGroupSelected = {
+                onEvent(MonthDetailEvent.ChangeGroupBy(it))
+            }
+        )
+
         Row(
-            modifier = Modifier
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+            modifier = Modifier.weight(1f),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            IconButton(
-                onClick = { onPreviousMonth }
-            ) {
-                Icon(
-                    modifier = Modifier
-                        .rotate(90f),
-                    imageVector = Icons.Default.KeyboardArrowDown,
-                    contentDescription = null,
-                )
-            }
-
-            Text(
-                modifier = Modifier
-                    .padding(16.dp),
-                text = title,
-                style = MaterialTheme.typography.titleMedium,
-                textAlign = TextAlign.Center
+            OrderSelector(
+                modifier = Modifier.weight(1f),
+                orderBy = orderBy,
+                groupBy = groupBy,
+                onOrderSelected = {
+                    onEvent(MonthDetailEvent.ChangeOrderBy(it))
+                }
             )
 
-            IconButton(
-                onClick = { onNextMonth }
-            ) {
-                Icon(
-                    modifier = Modifier
-                        .rotate(90f),
-                    imageVector = Icons.Default.KeyboardArrowUp,
-                    contentDescription = null,
-                )
-            }
-        }
-    }
-}
-
-@Composable
-fun ExpenseCardItem(
-    expense: Expense,
-    isFirst: Boolean,
-    isLast: Boolean,
-    onClickExpense: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-
-    val shape = when {
-        isFirst && isLast -> RoundedCornerShape(8.dp)
-        isFirst -> RoundedCornerShape(
-            topStart = 8.dp,
-            topEnd = 8.dp,
-            bottomStart = 0.dp,
-            bottomEnd = 0.dp
-        )
-        isLast -> RoundedCornerShape(
-            topStart = 0.dp,
-            topEnd = 0.dp,
-            bottomStart = 8.dp,
-            bottomEnd = 8.dp
-        )
-        else -> RoundedCornerShape(0.dp)
-    }
-
-    Card(
-        shape = shape,
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable { onClickExpense() },
-        elevation = CardDefaults.cardElevation(2.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surface
-        )
-    ) {
-        ExpenseItem(
-            expense = expense,
-            modifier = modifier.fillMaxWidth()
-        )
-    }
-}
-
-@Composable
-fun DayHeader(
-    day: LocalDate,
-    total: Double
-) {
-    val formatter = remember {
-        DateTimeFormatter.ofPattern("d MMM")
-    }
-
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(top = 16.dp, bottom = 8.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
-    ) {
-        Text(
-            text = day.format(formatter),
-            style = MaterialTheme.typography.titleMedium
-        )
-
-        Text(
-            text = total.formatAmount(),
-            style = MaterialTheme.typography.titleSmall,
-            color = MaterialTheme.colorScheme.primary
-        )
-    }
-}
-
-@Composable
-fun ExpenseItem(
-    expense: Expense,
-    modifier: Modifier = Modifier
-) {
-    Row(
-        modifier = modifier
-            .fillMaxSize()
-            .background(color = MaterialTheme.colorScheme.surface)
-            .padding(12.dp),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Column(
-            verticalArrangement = Arrangement.spacedBy(4.dp)
-        ) {
-            Text(expense.title, style = MaterialTheme.typography.bodyLarge)
-            CategoryPill(
-                name = expense.subcategory.name,
-                color = expense.subcategory.color
+            OrderDirectionToggle(
+                ascending = orderBy.isAscending(),
+                onClick = {
+                    onEvent(
+                        MonthDetailEvent.ChangeOrderBy(
+                            orderBy.toggleDirection()
+                        )
+                    )
+                }
             )
         }
-
-        Text(
-            text = expense.amount.formatAmount(),
-            style = MaterialTheme.typography.bodyLarge
-        )
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ExpenseBottomSheet(
-    expense: Expense,
-    categories: List<CategoryWithChildren>,
-    onEvent: (MonthDetailEvent) -> Unit
+fun GroupSelector(
+    groupBy: ExpenseGroupBy,
+    onGroupSelected: (ExpenseGroupBy) -> Unit,
+    modifier: Modifier = Modifier
 ) {
+    var expanded by remember { mutableStateOf(false) }
 
-    val sheetState = rememberModalBottomSheetState(
-        skipPartiallyExpanded = true
-    )
-
-    var hasChanges by remember(expense.id) { mutableStateOf(false) }
-
-    var title by remember(expense.id) { mutableStateOf(expense.title) }
-    var amount by remember(expense.id) { mutableStateOf(expense.amount.toString()) }
-    var category by remember(expense.id) { mutableStateOf(expense.subcategory) }
-    var date by remember(expense.id) { mutableStateOf(expense.date) }
-
-    ModalBottomSheet(
-        onDismissRequest = {
-            if (hasChanges) {
-                onEvent(MonthDetailEvent.UpdateExpense(
-                    expense.copy(
-                        title = title,
-                        amount = amount.toDouble(),
-                        subcategory = category,
-                        date = date
-                    )
-                ))
-            }
-            onEvent(MonthDetailEvent.DismissBottomSheet)
-        },
-        sheetState = sheetState,
-        contentWindowInsets = { WindowInsets(0, 0, 0, 0) }
+    ExposedDropdownMenuBox(
+        expanded = expanded,
+        onExpandedChange = { expanded = !expanded },
+        modifier = modifier
     ) {
-
-
-        Column(
+        OutlinedTextField(
+            value = when (groupBy) {
+                ExpenseGroupBy.Day -> "Date"
+                ExpenseGroupBy.Category -> "Category"
+            },
+            onValueChange = {},
+            readOnly = true,
+            label = { Text("Group") },
+            trailingIcon = {
+                ExposedDropdownMenuDefaults.TrailingIcon(expanded)
+            },
             modifier = Modifier
+                .menuAnchor()
                 .fillMaxWidth()
-                .imePadding()
-                .navigationBarsPadding()
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+        )
+
+        ExposedDropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { expanded = false }
         ) {
-
-            Text(
-                text = "Editar despesa",
-                style = MaterialTheme.typography.titleLarge
-            )
-
-            OutlinedTextField(
-                value = title,
-                onValueChange = {
-                    title = it
-                    hasChanges = true
-                },
-                label = { Text("Títol") },
-                modifier = Modifier.fillMaxWidth(),
-                keyboardOptions = KeyboardOptions(
-                    imeAction = ImeAction.Done,
-                    keyboardType = KeyboardType.Text
-                )
-            )
-
-            OutlinedTextField(
-                value = amount,
-                onValueChange = {
-                    limitTwoDecimals(it) {
-                        amount = it
-                    }
-                    hasChanges = true
-                },
-                label = { Text("Import") },
-                modifier = Modifier.fillMaxWidth(),
-                keyboardOptions = KeyboardOptions(
-                    imeAction = ImeAction.Done,
-                    keyboardType = KeyboardType.Decimal
-                )
-            )
-
-            CategorySelectorDropdown(
-                modifier = Modifier.fillMaxWidth(),
-                categories = categories,
-                selectedSubcategory = category,
-                onSubcategorySelected = {
-                    category = it
-                    hasChanges = true
-                }
-            )
-
-            ExpenseDateField(
-                date = date,
-                onDateSelected = {
-                    date = it
-                    hasChanges = true
-                }
-            )
-
-            Spacer(Modifier.height(24.dp))
-
-            HorizontalDivider()
-
-            TextButton(
+            DropdownMenuItem(
+                text = { Text("Date") },
                 onClick = {
-                    hasChanges = false
-                    onEvent(MonthDetailEvent.DeleteExpense(expense))
-                    onEvent(MonthDetailEvent.DismissBottomSheet)
-                },
-                colors = ButtonDefaults.textButtonColors(
-                    contentColor = MaterialTheme.colorScheme.error
-                ),
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text("Eliminar despesa")
+                    onGroupSelected(ExpenseGroupBy.Day)
+                    expanded = false
+                }
+            )
+
+            DropdownMenuItem(
+                text = { Text("Category") },
+                onClick = {
+                    onGroupSelected(ExpenseGroupBy.Category)
+                    expanded = false
+                }
+            )
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun OrderSelector(
+    orderBy: ExpenseOrderBy,
+    groupBy: ExpenseGroupBy,
+    onOrderSelected: (ExpenseOrderBy) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    var expanded by remember { mutableStateOf(false) }
+
+    ExposedDropdownMenuBox(
+        expanded = expanded,
+        onExpandedChange = { expanded = !expanded },
+        modifier = modifier
+    ) {
+        OutlinedTextField(
+            value = orderBy.toLabel(),
+            onValueChange = {},
+            readOnly = true,
+            label = { Text("Order") },
+            trailingIcon = {
+                ExposedDropdownMenuDefaults.TrailingIcon(expanded)
+            },
+            modifier = Modifier
+                .menuAnchor()
+                .fillMaxWidth()
+        )
+
+        ExposedDropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { expanded = false }
+        ) {
+            groupBy.options.forEach { option ->
+                DropdownMenuItem(
+                    text = {
+                        Text(option.toLabel())
+                    },
+                    onClick = {
+                        onOrderSelected(option)
+                        expanded = false
+                    }
+                )
             }
         }
     }
 }
 
+@Composable
+fun OrderDirectionToggle(
+    ascending: Boolean,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    FilledIconButton(
+        onClick = onClick,
+        modifier = modifier.size(56.dp)
+    ) {
+        Icon(
+            imageVector = if (ascending) {
+                Icons.Default.KeyboardArrowUp
+            } else {
+                Icons.Default.KeyboardArrowDown
+            },
+            contentDescription = null
+        )
+    }
+}
+
+fun ExpenseOrderBy.toLabel(): String {
+    return when (this) {
+        is ExpenseOrderBy.Date -> "Date"
+        is ExpenseOrderBy.Total -> "Total"
+        is ExpenseOrderBy.Alphabetical -> "Alphabetical"
+    }
+}
+
+fun ExpenseOrderBy.isAscending(): Boolean {
+    return when (this) {
+        is ExpenseOrderBy.Date -> ascending
+        is ExpenseOrderBy.Total -> ascending
+        is ExpenseOrderBy.Alphabetical -> ascending
+    }
+}
+
+fun ExpenseOrderBy.toggleDirection(): ExpenseOrderBy {
+    return when (this) {
+        is ExpenseOrderBy.Date ->
+            copy(ascending = !ascending)
+
+        is ExpenseOrderBy.Total ->
+            copy(ascending = !ascending)
+
+        is ExpenseOrderBy.Alphabetical ->
+            copy(ascending = !ascending)
+    }
+}

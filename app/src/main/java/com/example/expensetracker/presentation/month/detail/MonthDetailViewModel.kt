@@ -11,11 +11,13 @@ import com.example.expensetracker.domain.usecase.expense.GetMonthExpensesUseCase
 import com.example.expensetracker.domain.usecase.expense.UpdateExpenseUseCase
 import com.example.expensetracker.presentation.month.list.MonthListEffect
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
@@ -40,26 +42,31 @@ class MonthDetailViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(MonthDetailState(yearMonth = yearMonth))
 
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     val state: StateFlow<MonthDetailState> =
-        combine(
-            _uiState,
-            getMonthExpensesUseCase(
-                yearMonth,
-                _uiState.value.groupBy,
-                _uiState.value.orderBy
-            ),
-            getCategoriesUseCase()
-        ) { ui, groupedExpenses, categories ->
+        _uiState
+            .flatMapLatest { ui ->
 
-            ui.copy(
-                expenseGroups = groupedExpenses,
-                categories = categories
+                combine(
+                    getMonthExpensesUseCase(
+                        yearMonth = yearMonth,
+                        groupBy = ui.groupBy,
+                        orderBy = ui.orderBy
+                    ),
+                    getCategoriesUseCase()
+                ) { groupedExpenses, categories ->
+
+                    ui.copy(
+                        expenseGroups = groupedExpenses,
+                        categories = categories
+                    )
+                }
+            }
+            .stateIn(
+                viewModelScope,
+                SharingStarted.WhileSubscribed(5_000),
+                _uiState.value
             )
-        }.stateIn(
-            viewModelScope,
-            SharingStarted.WhileSubscribed(5_000),
-            _uiState.value
-        )
 
 
     fun onEvent(event: MonthDetailEvent) {
@@ -104,6 +111,21 @@ class MonthDetailViewModel @Inject constructor(
             MonthDetailEvent.AddExpensesClick -> {
                 viewModelScope.launch {
                     _effects.send(MonthDetailEffect.NavigateToAddExpense)
+                }
+            }
+
+            is MonthDetailEvent.ChangeGroupBy -> {
+                _uiState.update {
+                    it.copy(
+                        groupBy = event.by
+                    )
+                }
+            }
+            is MonthDetailEvent.ChangeOrderBy -> {
+                _uiState.update {
+                    it.copy(
+                        orderBy = event.by
+                    )
                 }
             }
         }

@@ -1,6 +1,20 @@
 package com.example.expensetracker.domain.model.expense
 
 sealed interface ExpenseGroupBy {
-    data object Day : ExpenseGroupBy
-    data object Category : ExpenseGroupBy
+
+    val options: List<ExpenseOrderBy>
+
+    data object Day : ExpenseGroupBy {
+        override val options = listOf(
+            ExpenseOrderBy.Date(true),
+            ExpenseOrderBy.Total(false)
+        )
+    }
+
+    data object Category : ExpenseGroupBy {
+        override val options = listOf(
+            ExpenseOrderBy.Alphabetical(true),
+            ExpenseOrderBy.Total(false)
+        )
+    }
 }
