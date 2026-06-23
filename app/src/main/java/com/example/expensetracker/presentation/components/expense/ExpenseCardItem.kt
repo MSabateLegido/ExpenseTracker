@@ -10,6 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.expensetracker.domain.model.expense.Expense
+import com.example.expensetracker.presentation.components.category.CategoryPill
 
 @Composable
 fun ExpenseCardItem(
@@ -17,7 +18,8 @@ fun ExpenseCardItem(
     isFirst: Boolean,
     isLast: Boolean,
     onClickExpense: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    secondaryContent: @Composable (() -> Unit)? = null
 ) {
 
     val shape = when {
@@ -49,7 +51,8 @@ fun ExpenseCardItem(
     ) {
         ExpenseItem(
             expense = expense,
-            modifier = modifier.fillMaxWidth()
+            modifier = modifier.fillMaxWidth(),
+            secondaryContent = secondaryContent
         )
     }
 }

@@ -7,6 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.dp
 import com.example.expensetracker.domain.model.expense.ExpenseGroup
 import com.example.expensetracker.domain.model.expense.ExpenseGroupKey
+import com.example.expensetracker.presentation.components.category.CategoryPill
 import com.example.expensetracker.presentation.month.detail.MonthDetailEvent
 
 @Composable
@@ -14,9 +15,7 @@ fun DayGroupedExpensesList(
     expenseGroups: List<ExpenseGroup>,
     onEvent: (MonthDetailEvent) -> Unit
 ) {
-    LazyColumn(
-        verticalArrangement = Arrangement.spacedBy(16.dp)
-    ) {
+    LazyColumn{
         expenseGroups.forEach { group ->
 
             val key = group.key as? ExpenseGroupKey.Day ?: return@forEach
@@ -39,6 +38,12 @@ fun DayGroupedExpensesList(
                     isLast = index == group.expenses.lastIndex,
                     onClickExpense = {
                         onEvent(MonthDetailEvent.OnClickExpense(expense))
+                    },
+                    secondaryContent = {
+                        CategoryPill(
+                            name = expense.subcategory.name,
+                            color = expense.subcategory.color
+                        )
                     }
                 )
             }

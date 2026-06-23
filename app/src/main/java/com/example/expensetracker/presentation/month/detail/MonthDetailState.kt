@@ -10,8 +10,8 @@ import java.time.YearMonth
 
 data class MonthDetailState(
     val expenseGroups: List<ExpenseGroup> = emptyList(),
-    val groupBy: ExpenseGroupBy = ExpenseGroupBy.Category,
-    val orderBy: ExpenseOrderBy = ExpenseOrderBy.Alphabetical(true),
+    val groupBy: ExpenseGroupBy = ExpenseGroupBy.Day,
+    val orderBy: ExpenseOrderBy = ExpenseOrderBy.Date(false),
     val yearMonth: YearMonth = YearMonth.now(),
     val selectedExpense: Expense? = null,
     val categories: List<CategoryWithChildren> = emptyList()

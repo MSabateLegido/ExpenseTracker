@@ -19,7 +19,8 @@ import com.example.expensetracker.utils.formatAmount
 @Composable
 fun ExpenseItem(
     expense: Expense,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    secondaryContent: @Composable (() -> Unit)? = null
 ) {
     Row(
         modifier = modifier
@@ -30,13 +31,10 @@ fun ExpenseItem(
         verticalAlignment = Alignment.CenterVertically
     ) {
         Column(
-            verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
             Text(expense.title, style = MaterialTheme.typography.bodyLarge)
-            CategoryPill(
-                name = expense.subcategory.name,
-                color = expense.subcategory.color
-            )
+
+            secondaryContent?.invoke()
         }
 
         Text(
