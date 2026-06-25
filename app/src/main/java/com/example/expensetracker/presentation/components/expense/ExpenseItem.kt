@@ -13,7 +13,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.expensetracker.domain.model.expense.Expense
-import com.example.expensetracker.presentation.components.category.CategoryPill
 import com.example.expensetracker.utils.formatAmount
 
 @Composable
@@ -28,9 +27,10 @@ fun ExpenseItem(
             .background(color = MaterialTheme.colorScheme.surface)
             .padding(12.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         Column(
+            verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
             Text(expense.title, style = MaterialTheme.typography.bodyLarge)
 

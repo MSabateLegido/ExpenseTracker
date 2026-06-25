@@ -1,68 +1,36 @@
 package com.example.expensetracker.presentation.month.detail
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.imePadding
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.FilledIconButton
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.example.expensetracker.domain.model.category.CategoryWithChildren
-import com.example.expensetracker.domain.model.expense.Expense
 import com.example.expensetracker.domain.model.expense.ExpenseGroupBy
 import com.example.expensetracker.domain.model.expense.ExpenseOrderBy
-import com.example.expensetracker.presentation.expenses.add.limitTwoDecimals
-import com.example.expensetracker.presentation.components.category.CategoryPill
-import com.example.expensetracker.presentation.components.category.CategorySelectorDropdown
 import com.example.expensetracker.presentation.components.expense.ExpenseBottomSheet
-import com.example.expensetracker.presentation.components.expense.ExpenseDateField
 import com.example.expensetracker.presentation.components.expense.ExpensesList
 import com.example.expensetracker.presentation.components.month.MonthTitle
-import com.example.expensetracker.utils.formatAmount
 import com.example.expensetracker.utils.formatMonthYear
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 
 
 @Composable
@@ -170,7 +138,7 @@ fun GroupSelector(
         OutlinedTextField(
             value = when (groupBy) {
                 ExpenseGroupBy.Day -> "Date"
-                ExpenseGroupBy.Category -> "Category"
+                ExpenseGroupBy.Subcategory -> "Category"
             },
             onValueChange = {},
             readOnly = true,
@@ -198,7 +166,7 @@ fun GroupSelector(
             DropdownMenuItem(
                 text = { Text("Category") },
                 onClick = {
-                    onGroupSelected(ExpenseGroupBy.Category)
+                    onGroupSelected(ExpenseGroupBy.Subcategory)
                     expanded = false
                 }
             )

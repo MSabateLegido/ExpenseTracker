@@ -33,13 +33,9 @@ class GetMonthExpensesUseCase @Inject constructor(
                             Day(expense.date)
                         }
 
-                    ExpenseGroupBy.Category ->
+                    ExpenseGroupBy.Subcategory ->
                         expenses.groupBy { expense ->
-                            Category(
-                                categoryId = expense.subcategory.category.id,
-                                subcategoryId = expense.subcategory.id,
-                                name = expense.subcategory.name
-                            )
+                            Subcategory(expense.subcategory)
                         }
                 }
 
@@ -78,7 +74,7 @@ class GetMonthExpensesUseCase @Inject constructor(
             is ExpenseOrderBy.Alphabetical -> {
                 val sorted = groups.sortedBy {
                     when (val key = it.key) {
-                        is Category -> key.name
+                        is Subcategory -> key.subcategory.name
                         is Day -> key.date.toString()
                     }
                 }

@@ -20,14 +20,14 @@ fun CategoryGroupedExpensesList(
         items(
             items = expenseGroups,
             key = { group ->
-                (group.key as ExpenseGroupKey.Category).subcategoryId
+                (group.key as ExpenseGroupKey.Subcategory).subcategory.id
             }
         ) { group ->
 
-            val key = group.key as ExpenseGroupKey.Category
+            val key = group.key as ExpenseGroupKey.Subcategory
 
             CategoryExpenseGroup(
-                title = key.name,
+                subcategory = key.subcategory,
                 total = group.total,
                 expenses = group.expenses,
                 onEvent = onEvent

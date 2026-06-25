@@ -12,13 +12,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.expensetracker.utils.contrastTextColor
 
 @Composable
 fun CategoryPill(
     name: String,
-    color: Color
+    color: Color,
+    maxWidth: Dp = 54.dp
 ) {
     val textColor = remember(color) {
         color.contrastTextColor()
@@ -33,7 +35,7 @@ fun CategoryPill(
             .padding(horizontal = 10.dp, vertical = 4.dp)
             .widthIn(
                 min = 0.dp,
-                max = 54.dp
+                max = maxWidth
             )
     ) {
         Text(

@@ -19,7 +19,7 @@ fun ExpensesList(
             )
         }
 
-        ExpenseGroupBy.Category -> {
+        ExpenseGroupBy.Subcategory -> {
             CategoryGroupedExpensesList(
                 expenseGroups = expenseGroups,
                 onEvent = onEvent

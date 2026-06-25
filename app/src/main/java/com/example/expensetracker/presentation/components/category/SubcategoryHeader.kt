@@ -1,7 +1,10 @@
 package com.example.expensetracker.presentation.components.category
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -15,12 +18,15 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import com.example.expensetracker.domain.model.category.Subcategory
 import com.example.expensetracker.utils.formatAmount
 
 @Composable
-fun CategoryHeader(
-    title: String,
+fun SubcategoryHeader(
+    subcategory: Subcategory,
     total: Double,
     onClick: () -> Unit,
     modifier: Modifier = Modifier
@@ -29,32 +35,51 @@ fun CategoryHeader(
         modifier = modifier
             .fillMaxWidth()
             .clickable { onClick() },
-        elevation = CardDefaults.cardElevation(2.dp),
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surface
+            containerColor = subcategory.color.copy(0.1f)
+        ),
+        border = BorderStroke(
+            color = subcategory.color.copy(0.25f),
+            width = 1.dp
         )
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp, vertical = 14.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
 
-            Text(
-                text = title,
-                style = MaterialTheme.typography.titleMedium
-            )
+            Column(
+                modifier = Modifier.weight(1.25f),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                Text(
+                    text = subcategory.name,
+                    style = MaterialTheme.typography.titleMedium,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                )
+
+                CategoryPill(
+                    name = subcategory.category.name,
+                    color = subcategory.category.color
+                )
+            }
 
             Row(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                horizontalArrangement = Arrangement.spacedBy(
+                    8.dp,
+                    Alignment.End
+                )
             ) {
                 Text(
                     text = total.formatAmount(),
                     style = MaterialTheme.typography.titleSmall,
-                    color = MaterialTheme.colorScheme.primary
                 )
 
                 Icon(

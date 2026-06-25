@@ -11,7 +11,7 @@ sealed interface ExpenseGroupBy {
         )
     }
 
-    data object Category : ExpenseGroupBy {
+    data object Subcategory : ExpenseGroupBy {
         override val options = listOf(
             ExpenseOrderBy.Alphabetical(true),
             ExpenseOrderBy.Total(false)
