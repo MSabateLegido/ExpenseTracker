@@ -1,9 +1,11 @@
 package com.example.expensetracker.presentation.components.expense
 
-import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.expensetracker.domain.model.expense.ExpenseGroup
 import com.example.expensetracker.domain.model.expense.ExpenseGroupKey
@@ -15,10 +17,13 @@ fun DayGroupedExpensesList(
     expenseGroups: List<ExpenseGroup>,
     onEvent: (MonthDetailEvent) -> Unit
 ) {
-    LazyColumn{
+    LazyColumn(
+        modifier = Modifier.fillMaxSize(),
+        contentPadding = PaddingValues(bottom = 32.dp)
+    ) {
         expenseGroups.forEach { group ->
 
-            val key = group.key as? ExpenseGroupKey.Day ?: return@forEach
+            val key = group.key as? ExpenseGroupKey.DateGroup ?: return@forEach
 
             item(key = "header_${key.date}") {
                 DayHeader(

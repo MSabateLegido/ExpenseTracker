@@ -117,7 +117,8 @@ class MonthDetailViewModel @Inject constructor(
             is MonthDetailEvent.ChangeGroupBy -> {
                 _uiState.update {
                     it.copy(
-                        groupBy = event.by
+                        groupBy = event.by,
+                        orderBy = event.by.defaultOption
                     )
                 }
             }

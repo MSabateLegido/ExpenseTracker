@@ -246,7 +246,7 @@ fun ExpenseOrderBy.toLabel(): String {
     return when (this) {
         is ExpenseOrderBy.Date -> "Date"
         is ExpenseOrderBy.Total -> "Total"
-        is ExpenseOrderBy.Alphabetical -> "Alphabetical"
+        is ExpenseOrderBy.Alphabetical -> "A-Z"
     }
 }
 
